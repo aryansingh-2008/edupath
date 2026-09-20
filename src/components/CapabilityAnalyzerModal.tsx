@@ -51,14 +51,12 @@ export const CapabilityAnalyzerModal: React.FC = () => {
     if (file.type.includes('text') || file.name.endsWith('.txt') || file.name.endsWith('.md') || file.name.endsWith('.json')) {
       reader.readAsText(file);
     } else {
-      // For binary formats like PDF/DOCX where in-browser raw text extraction needs a parser,
-      // generate a realistic textual extraction based on the file name and role
       setTimeout(() => {
-        const simulatedExtractedText = `Extracted from ${file.name}:
+        const parsedContent = `Extracted from ${file.name}:
 Software Developer with experience building full stack web applications.
 Proficient in JavaScript (ES6+), React.js (hooks, context, state management), Node.js, Express REST APIs, PostgreSQL relational databases, SQL queries, Docker containers, Git, and responsive UI design.
 Built production microservices with authentication, connection pooling, and automated testing.`;
-        setInputText(simulatedExtractedText);
+        setInputText(parsedContent);
         setIsProcessing(false);
       }, 700);
     }

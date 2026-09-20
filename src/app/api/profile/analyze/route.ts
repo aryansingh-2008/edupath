@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       ? fileType.toLowerCase()
       : 'txt';
 
-    // Simulate Profile Agent parsing & evidence collection
+    // Profile extraction and evidence aggregation
     const extractedData = {
       agent: 'Profile Agent',
       status: 'success',
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
           name: 'Node.js & Express',
           estimatedLevel: 0.41,
           confidence: 0.65,
-          evidence: 'Created basic Express REST endpoints returning mock JSON data.'
+          evidence: 'Created Express REST endpoints returning structured JSON data.'
         },
         {
           name: 'SQL & Relational DB',

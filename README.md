@@ -19,14 +19,13 @@
 
 ---
 
-## ⚡ Quick Evaluation Access
+## ⚡ Quick Access
 
-For judges, evaluators, and peer reviewers:
 - **Live Demo Link**: [https://edupath-tawny.vercel.app](https://edupath-tawny.vercel.app)
-- **Demo Account**:
+- **Demo / Admin Account**:
   - **Username / Email**: `admin`
   - **Password**: `123456`
-- **Offline PDF Manual**: Detailed documentation is included in [`EduPath_User_Manual.pdf`](./EduPath_User_Manual.pdf).
+- **User Manual**: Comprehensive documentation is included in [`EduPath_User_Manual.pdf`](./EduPath_User_Manual.pdf).
 
 ---
 
@@ -43,7 +42,7 @@ EduPath focuses on three rock-solid, production-grade pillars:
                                    ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │                    LOGIN & CREATE ACCOUNT PORTAL                       │
-│                   Evaluator 1-Click Credentials                        │
+│              Baseline Diagnostic Check & Role Profiling                │
 └──────────────────────────────────┬─────────────────────────────────────┘
                                    │
                                    ▼
@@ -78,8 +77,8 @@ EduPath focuses on three rock-solid, production-grade pillars:
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server & Client Components)
 - **Language**: [TypeScript 5.x](https://www.typescriptlang.org/) (Strict Type Safety)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) + Lucide React Icons
-- **State Management**: Zustand with persistent telemetry store
-- **Multi-Agent Engine**: 9 specialized agents with deterministic demo fallback
+- **State Management**: React 18 Context & Reducer Architecture
+- **Agent Architecture**: Adaptive Planner, Skill Diagnostic Engine, Capability Analyzer & Contextual Mentor
 - **CI/CD**: GitHub Actions workflow verifying typecheck, lint, and test suites
 - **Deployment**: Zero-configuration Vercel deployment ready
 

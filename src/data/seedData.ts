@@ -53,7 +53,7 @@ export const INITIAL_ALEX_PROFILE: LearnerProfile = {
       targetBenchmark: 0.75,
       status: 'developing',
       evidence: [
-        { source: 'resume', quote: 'Created basic Express REST endpoints returning mock JSON data.', verified: false }
+        { source: 'resume', quote: 'Created basic Express REST endpoints returning structured JSON data.', verified: false }
       ]
     },
     {

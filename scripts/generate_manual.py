@@ -505,7 +505,7 @@ npm run dev
 </table>
 
 <div class="callout callout-info">
-  <strong>Auditability:</strong> Click the <span class="badge badge-green">Agents (9)</span> button in the top navigation header at any time to open the <strong>Live Agent Activity Drawer</strong>, showing real-time execution logs, latency benchmarks, and payload summaries for all 9 agents.
+  <strong>Auditability:</strong> Click the <span class="badge badge-green">Agent Activity</span> button in the top navigation header at any time to open the <strong>Live Agent Activity Drawer</strong>, showing real-time execution logs, latency benchmarks, and payload summaries for autonomous subsystems.
 </div>
 
 <!-- CHAPTER 4 -->

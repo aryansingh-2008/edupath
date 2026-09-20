@@ -252,7 +252,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   ]);
 
-  // TRIGGER THE CORE ADAPTIVE REPLANNING LOOP
+  // Adaptive replanning handler
   const simulateSqlStruggle = () => {
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -307,7 +307,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsWhyPlanChangedModalOpen(true);
   };
 
-  // TRIGGER TASK OR MISSION COMPLETION
+  // Task and milestone completion handler
   const simulateTaskCompletion = (taskId?: string) => {
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -362,7 +362,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setAgentRuns(prev => [progressRun, ...prev]);
   };
 
-  // SUBMIT QUIZ ANSWER: ONLY AWARDS XP ON CORRECT ANSWERS!
+  // Quiz assessment answer verification
   const submitQuizAnswer = (
     questionId: string,
     selectedIndex: number,
@@ -408,7 +408,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setAgentRuns(prev => [progressRun, ...prev]);
       }
     } else {
-      // STRICT ZERO XP FOR WRONG ANSWERS!
+      // Zero XP awarded for incorrect response
       xpAwarded = 0;
       const failureCount = practiceAttempts.filter(a => !a.isCorrect).length + 1;
       if (failureCount >= 2 && !bottleneckDetected) {
@@ -431,7 +431,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return { isCorrect, xpAwarded, firstTime: !alreadySolved };
   };
 
-  // RESET DEMO TO CLEAN BASELINE
+  // Reset state to baseline profile
   const resetDemo = () => {
     setProfile(INITIAL_ALEX_PROFILE);
     setRoadmap(INITIAL_ROADMAP_ALEX);
@@ -445,7 +445,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setActiveTab('path');
   };
 
-  // REBALANCE LEARNING DEBT
+  // Rebalance deferred prerequisite debt
   const rebalanceLearningDebt = () => {
     setLearningDebtRebalanced(true);
     setProfile(prev => ({
@@ -465,7 +465,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setAgentRuns(prev => [rebalanceRun, ...prev]);
   };
 
-  // SEND CHAT MESSAGE TO MENTOR
+  // Send message to contextual mentor
   const sendChatMessage = (text: string) => {
     if (!text.trim()) return;
 
@@ -497,12 +497,12 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setChatMessages(prev => [...prev, userMsg, mentorMsg]);
   };
 
-  // UPDATE LEARNER PROFILE
+  // Update learner profile attributes
   const updateProfile = (updates: Partial<LearnerProfile>) => {
     setProfile(prev => ({ ...prev, ...updates }));
   };
 
-  // LOAD DYNAMIC CUSTOM PROFILE & ROADMAP
+  // Set custom profile and roadmap
   const setCustomProfileAndRoadmap = (newProfile: LearnerProfile, newRoadmap: RoadmapMilestone[]) => {
     setProfile(newProfile);
     setRoadmap(newRoadmap);
