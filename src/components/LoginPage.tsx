@@ -10,9 +10,6 @@ import {
   Briefcase,
   ArrowRight,
   ArrowLeft,
-  Sparkles,
-  KeyRound,
-  ShieldCheck,
   CheckCircle2,
   Code,
   Clock,
@@ -82,15 +79,6 @@ export const LoginPage: React.FC<{
     createAccount(fullName, email, targetRole, skillsText, dailyMinutes);
   };
 
-  const handleQuickLogin = (presetUser: string, presetRole: string) => {
-    setUsername(presetUser);
-    setPassword('123456');
-    setSignInRole(presetRole);
-    try {
-      confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
-    } catch {}
-    login(presetUser, presetRole);
-  };
 
   const addSkillChip = (skill: string) => {
     if (skillsText.includes(skill)) return;
@@ -126,16 +114,6 @@ export const LoginPage: React.FC<{
           </p>
         </div>
 
-        {/* HACKATHON EVALUATOR NOTICE BOX */}
-        <div className="p-3.5 rounded-2xl bg-blue-950/40 border border-blue-500/40 shadow-lg space-y-1 text-xs text-blue-200">
-          <div className="flex items-center gap-1.5 font-bold text-blue-300">
-            <KeyRound className="w-3.5 h-3.5 text-amber-300" />
-            <span>Agentic AI Hackathon 2026 &bull; Evaluator Credentials</span>
-          </div>
-          <p className="text-[11px] text-slate-300">
-            Username: <code className="bg-black/50 px-1.5 py-0.5 rounded text-amber-300 font-mono">admin</code> &bull; Password: <code className="bg-black/50 px-1.5 py-0.5 rounded text-amber-300 font-mono">123456</code>
-          </p>
-        </div>
 
         
         <div className="bg-[#0f172a]/95 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-xl space-y-5">
@@ -254,37 +232,6 @@ export const LoginPage: React.FC<{
                 </p>
               </div>
 
-              {/* 1-CLICK PRESETS */}
-              <div className="pt-3 border-t border-slate-800/80 space-y-2">
-                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider block text-center">
-                  One-Click Evaluator Presets
-                </span>
-                <div className="grid grid-cols-1 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickLogin('admin', 'Full Stack Developer')}
-                    className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold flex items-center justify-between transition"
-                  >
-                    <span className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Admin Judge (Full Stack Track)</span>
-                    </span>
-                    <span className="text-[10px] text-blue-400 font-mono">1-Click</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleQuickLogin('Pranav', 'AI / ML Engineer')}
-                    className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold flex items-center justify-between transition"
-                  >
-                    <span className="flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-                      <span>AI / ML Engineer Track (Pranav)</span>
-                    </span>
-                    <span className="text-[10px] text-purple-400 font-mono">1-Click</span>
-                  </button>
-                </div>
-              </div>
             </form>
           )}
 

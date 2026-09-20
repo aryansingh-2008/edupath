@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useEduPath } from '../store/useEduPathStore';
 import {
   Compass,
   ArrowRight,
@@ -9,21 +8,10 @@ import {
   Zap,
   MapPin,
   Bot,
-  KeyRound,
   UserPlus
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 export const LandingPage: React.FC<{ onEnterApp: (mode?: 'signin' | 'signup') => void }> = ({ onEnterApp }) => {
-  const { login } = useEduPath();
-
-  const handleJudgeDirectLogin = () => {
-    try {
-      confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
-    } catch {}
-    login('admin', 'Full Stack Developer');
-  };
-
   return (
     <div className="min-h-screen bg-[#080c16] text-slate-100 selection:bg-blue-600 selection:text-white font-sans">
       
@@ -40,14 +28,6 @@ export const LandingPage: React.FC<{ onEnterApp: (mode?: 'signin' | 'signup') =>
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleJudgeDirectLogin}
-              className="text-xs font-semibold text-amber-300 hover:text-amber-200 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 transition hidden md:flex items-center gap-1.5"
-            >
-              <KeyRound className="w-3.5 h-3.5 text-amber-400" />
-              <span>1-Click Judge Access (admin / 123456)</span>
-            </button>
-
             <button
               onClick={() => onEnterApp('signin')}
               className="text-xs font-semibold text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition"
@@ -71,15 +51,11 @@ export const LandingPage: React.FC<{ onEnterApp: (mode?: 'signin' | 'signup') =>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
 
         <div className="max-w-5xl mx-auto text-center space-y-6 relative z-10">
-          {/* HACKATHON CREDENTIALS HIGHLIGHT BADGE */}
           <div className="inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-2xl bg-blue-950/60 border border-blue-500/40 text-blue-200 text-xs shadow-lg">
-            <span className="font-bold text-amber-300 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5" />
-              Agentic AI Hackathon 2026 Evaluator Access:
-            </span>
-            <span>Username: <code className="bg-black/60 px-1.5 py-0.5 rounded text-amber-300 font-mono">admin</code></span>
-            <span>&bull;</span>
-            <span>Password: <code className="bg-black/60 px-1.5 py-0.5 rounded text-amber-300 font-mono">123456</code></span>
+            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+            <span className="font-semibold text-slate-200">Autonomous AI Career Learning Platform</span>
+            <span className="text-slate-500">&bull;</span>
+            <span className="text-blue-300 font-medium">Dynamic Closed-Loop Replanning</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.1]">
@@ -104,13 +80,6 @@ export const LandingPage: React.FC<{ onEnterApp: (mode?: 'signin' | 'signup') =>
             >
               <span>Sign In</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleJudgeDirectLogin}
-              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-slate-900 to-indigo-950 hover:from-slate-800 hover:to-indigo-900 text-amber-300 font-semibold text-sm border border-indigo-500/30 transition flex items-center gap-2"
-            >
-              <KeyRound className="w-4 h-4 text-amber-400" />
-              <span>⚡ 1-Click Judge Access</span>
             </button>
           </div>
 
@@ -245,7 +214,7 @@ export const LandingPage: React.FC<{ onEnterApp: (mode?: 'signin' | 'signup') =>
       <section className="py-20 px-6 border-t border-slate-900 text-center space-y-6 bg-gradient-to-b from-transparent to-[#04070e]">
         <h2 className="text-3xl sm:text-4xl font-bold text-white">Ready to Experience EduPath?</h2>
         <p className="text-sm text-slate-400 max-w-lg mx-auto">
-          Sign in using evaluator credentials (<code className="text-amber-300 font-mono">admin / 123456</code>) or enter your custom profile.
+          Sign in to your account or create your personalized career learning profile.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <button
@@ -268,7 +237,7 @@ export const LandingPage: React.FC<{ onEnterApp: (mode?: 'signin' | 'signup') =>
       <footer className="border-t border-slate-900 bg-[#04060d] px-6 py-6 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <span>EduPath &bull; Autonomous Career Upskilling &amp; Adaptive Learning Agent</span>
-          <span>Agentic AI Hackathon 2026 &bull; Evaluator Credentials: admin / 123456</span>
+          <span>&copy; 2026 EduPath. All rights reserved.</span>
         </div>
       </footer>
     </div>

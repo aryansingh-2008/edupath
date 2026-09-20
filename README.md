@@ -23,10 +23,9 @@
 
 For judges, evaluators, and peer reviewers:
 - **Live Demo Link**: [https://edupath-tawny.vercel.app](https://edupath-tawny.vercel.app)
-- **Evaluator Credentials**:
-  - **Username / Email**: `admin` (or `admin@edupath.ai`)
+- **Demo Account**:
+  - **Username / Email**: `admin`
   - **Password**: `123456`
-  - *Or click "1-Click Judge Access" on the landing page or login screen.*
 - **Offline PDF Manual**: Detailed documentation is included in [`EduPath_User_Manual.pdf`](./EduPath_User_Manual.pdf).
 
 ---

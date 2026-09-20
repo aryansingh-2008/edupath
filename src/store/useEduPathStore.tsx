@@ -97,11 +97,11 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
     setIsAuthenticated(true);
 
-    const isJudge = cleanName.toLowerCase() === 'admin';
+    const isAdmin = cleanName.toLowerCase() === 'admin';
     const { profile: customProfile, roadmap: customRoadmap } = generateCustomLearnerProfile(
-      isJudge ? 'Admin (Judge)' : cleanName,
+      cleanName,
       roleName,
-      isJudge ? 'JavaScript, React, Node.js' : skillsInput,
+      isAdmin ? 'JavaScript, React, Node.js' : skillsInput,
       dailyMinutes
     );
     setProfile(customProfile);

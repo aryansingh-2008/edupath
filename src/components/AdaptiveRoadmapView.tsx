@@ -111,7 +111,7 @@ export const AdaptiveRoadmapView: React.FC = () => {
         </button>
       </div>
 
-      {/* AGENTIC ADAPTATION TESTBED (FOR JUDGES & EVALUATORS) */}
+      {/* AUTONOMOUS AGENT ADAPTATION TESTBED */}
       <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-950/40 via-indigo-950/40 to-purple-950/40 border border-blue-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
