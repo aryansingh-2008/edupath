@@ -85,6 +85,37 @@ export const ROLE_BENCHMARKS: Record<string, RoleBenchmark> = {
         explanation: 'LEFT JOIN preserves every row from the primary table even when no foreign key match exists in the joined table.',
         hint: 'Think about preserving the left table rows.',
         difficulty: 'intermediate'
+      },
+      {
+        id: 'fs-q2',
+        skillId: 'js',
+        skillName: 'JavaScript (ES6+)',
+        subConcept: 'Event Loop & Microtasks',
+        prompt: 'What is the console output order of the following JavaScript snippet?\n\nconsole.log("1");\nsetTimeout(() => console.log("2"), 0);\nPromise.resolve().then(() => console.log("3"));\nconsole.log("4");',
+        type: 'mcq',
+        options: ['1, 2, 3, 4', '1, 4, 3, 2', '1, 4, 2, 3', '1, 3, 4, 2'],
+        correctIndex: 1,
+        explanation: 'Synchronous code runs first ("1", "4"). Microtasks (Promise.then) run before macrotasks (setTimeout), logging "3", then "2".',
+        hint: 'Microtasks are processed before the timer macrotask queue.',
+        difficulty: 'intermediate'
+      },
+      {
+        id: 'fs-q3',
+        skillId: 'react',
+        skillName: 'React.js',
+        subConcept: 'Automatic Batching (React 18)',
+        prompt: 'In React 18, how does automatic batching handle multiple state updates inside async promises and timeouts?',
+        type: 'mcq',
+        options: [
+          'State updates inside async callbacks trigger separate re-renders per update',
+          'Multiple state updates are batched together into a single re-render automatically',
+          'Automatic batching is disabled unless wrapping state in ReactDOM.flushSync()',
+          'State updates are dropped if called outside of synthetic event handlers'
+        ],
+        correctIndex: 1,
+        explanation: 'React 18 automatically batches all state updates across promises, setTimeout, and native events, triggering only one re-render.',
+        hint: 'React 18 aims to eliminate unnecessary re-renders everywhere.',
+        difficulty: 'intermediate'
       }
     ]
   },
@@ -146,6 +177,37 @@ export const ROLE_BENCHMARKS: Record<string, RoleBenchmark> = {
         explanation: 'df.fillna() replaces all NA/NaN values with specified values or statistical metrics like mean/median.',
         hint: 'Look for the word "fill".',
         difficulty: 'beginner'
+      },
+      {
+        id: 'ds-q2',
+        skillId: 'sql',
+        skillName: 'SQL & Data Extraction',
+        subConcept: 'HAVING Clause Aggregation',
+        prompt: 'Which clause must you use to filter aggregated group results (e.g., groups with COUNT(*) > 5) in an SQL query?',
+        type: 'mcq',
+        options: ['WHERE', 'HAVING', 'QUALIFY', 'FILTER BY'],
+        correctIndex: 1,
+        explanation: 'HAVING filters summarized rows after GROUP BY aggregation, whereas WHERE filters individual rows before grouping.',
+        hint: 'Applied after GROUP BY in SQL execution order.',
+        difficulty: 'intermediate'
+      },
+      {
+        id: 'ds-q3',
+        skillId: 'stats',
+        skillName: 'Statistical Modeling & Math',
+        subConcept: 'Hypothesis Testing & P-Values',
+        prompt: 'In hypothesis testing, if the calculated p-value is 0.02 and your significance threshold alpha is 0.05, what is the conclusion?',
+        type: 'mcq',
+        options: [
+          'Fail to reject the null hypothesis',
+          'Reject the null hypothesis as evidence of a significant effect',
+          'Accept the null hypothesis as proven fact',
+          'The sample size is too small to make a conclusion'
+        ],
+        correctIndex: 1,
+        explanation: 'When p-value (0.02) is less than alpha (0.05), we reject the null hypothesis, concluding there is statistically significant evidence.',
+        hint: 'If p is low, the null must go.',
+        difficulty: 'intermediate'
       }
     ]
   },
@@ -206,10 +268,56 @@ export const ROLE_BENCHMARKS: Record<string, RoleBenchmark> = {
         explanation: 'In pgvector, <=> computes cosine distance (1 - cosine similarity), <-> computes Euclidean (L2) distance, and <#> computes negative inner product.',
         hint: 'It uses the equals sign between angle brackets.',
         difficulty: 'intermediate'
+      },
+      {
+        id: 'ai-q2',
+        skillId: 'pytorch',
+        skillName: 'PyTorch & Deep Learning',
+        subConcept: 'Gradient Accumulation Reset',
+        prompt: 'In PyTorch, why must optimizer.zero_grad() be called before loss.backward() in each training iteration?',
+        type: 'mcq',
+        options: [
+          'To reset model weights to random normal distribution',
+          'Because PyTorch accumulates gradients by default, so old gradients must be cleared',
+          'To free GPU VRAM allocated by the DataLoader',
+          'To switch the neural network from training mode to evaluation mode'
+        ],
+        correctIndex: 1,
+        explanation: 'PyTorch accumulates gradients across backward calls. Without zero_grad(), new gradients would add to old batch gradients.',
+        hint: 'PyTorch does not overwrite gradients automatically; it sums them.',
+        difficulty: 'intermediate'
+      },
+      {
+        id: 'ai-q3',
+        skillId: 'fastapi',
+        skillName: 'Model Serving & FastAPI',
+        subConcept: 'Async Generator Streaming',
+        prompt: 'Why are async def routes with StreamingResponse preferred over sync def routes when streaming LLM tokens in FastAPI?',
+        type: 'mcq',
+        options: [
+          'Async routes allow non-blocking token yielding so concurrent requests are not blocked',
+          'FastAPI cannot serialize JSON objects in synchronous functions',
+          'Synchronous functions disable HTTPS TLS encryption',
+          'Async functions automatically run on the GPU tensor cores'
+        ],
+        correctIndex: 0,
+        explanation: 'Async generator functions stream chunks without blocking FastAPI event loop thread pool, allowing high concurrency.',
+        hint: 'Think about event loop non-blocking behavior.',
+        difficulty: 'intermediate'
       }
     ]
   }
 };
+
+export interface DiagnosticSubmission {
+  skillName: string;
+  isCorrect: boolean;
+}
+
+export function getDiagnosticQuestions(targetRoleName: string): PracticeQuestion[] {
+  const benchmark = ROLE_BENCHMARKS[targetRoleName] || ROLE_BENCHMARKS['Full Stack Developer'];
+  return benchmark.practiceQuestions;
+}
 
 export function generateCustomLearnerProfile(
   userName: string,
@@ -217,7 +325,8 @@ export function generateCustomLearnerProfile(
   userSkillsInput: string,
   dailyCommitment: number = 30,
   experienceLevel: string = 'Junior (1-2 yrs)',
-  careerGoal: string = ''
+  careerGoal: string = '',
+  diagnosticSubmissions?: DiagnosticSubmission[]
 ): {
   profile: LearnerProfile;
   roadmap: RoadmapMilestone[];
@@ -230,23 +339,49 @@ export function generateCustomLearnerProfile(
     .map(s => s.trim())
     .filter(s => s.length > 0);
 
-  // Compute skill proficiencies
+  // Compute skill proficiencies based on DIAGNOSTIC CHECK or self-report
   const skills: Skill[] = benchmark.skills.map((bench, idx) => {
-    // Check if user mentioned this skill or keyword
-    const match = userSkillList.some(userSkill =>
-      bench.name.toLowerCase().includes(userSkill) || userSkill.includes(bench.name.toLowerCase().split(' ')[0])
-    );
+    // Check if evaluated in the initial diagnostic check
+    const diagMatch = diagnosticSubmissions?.find(sub => {
+      const benchTokens = bench.name.toLowerCase().split(/[\s&/(),]+/);
+      return benchTokens.some(t => t.length > 2 && sub.skillName.toLowerCase().includes(t));
+    });
 
-    let estimatedLevel = 0.20; // baseline if missing
+    let estimatedLevel = 0.20;
     let confidence = 0.60;
     let status: Skill['status'] = 'gap';
     let evidenceQuote = `Self-reported initial baseline for ${bench.name}.`;
+    let evidenceSource: Skill['evidence'][0]['source'] = 'resume';
+    let verified = false;
 
-    if (match) {
-      estimatedLevel = 0.70 + Math.random() * 0.15; // 70-85% if user listed it
-      confidence = 0.85;
-      status = estimatedLevel >= bench.targetBenchmark ? 'mastered' : 'developing';
-      evidenceQuote = `Verified via profile intake: learner identified proficiency in ${bench.name}.`;
+    if (diagMatch) {
+      if (diagMatch.isCorrect) {
+        estimatedLevel = 0.88;
+        confidence = 0.98;
+        status = 'mastered';
+        evidenceQuote = `Demonstrated verified proficiency in initial technical diagnostic check (100% correct answer).`;
+        evidenceSource = 'practice';
+        verified = true;
+      } else {
+        estimatedLevel = 0.18;
+        confidence = 0.92;
+        status = 'gap';
+        evidenceQuote = `Diagnostic check identified critical prerequisite gap in ${bench.name}. Prioritized for immediate remediation.`;
+        evidenceSource = 'practice';
+        verified = false;
+      }
+    } else {
+      const match = userSkillList.some(userSkill =>
+        bench.name.toLowerCase().includes(userSkill) || userSkill.includes(bench.name.toLowerCase().split(' ')[0])
+      );
+
+      if (match) {
+        estimatedLevel = 0.70 + Math.random() * 0.15;
+        confidence = 0.85;
+        status = estimatedLevel >= bench.targetBenchmark ? 'mastered' : 'developing';
+        evidenceQuote = `Verified via profile intake: learner identified proficiency in ${bench.name}.`;
+        verified = true;
+      }
     }
 
     return {
@@ -259,32 +394,40 @@ export function generateCustomLearnerProfile(
       status,
       evidence: [
         {
-          source: 'resume',
+          source: evidenceSource,
           quote: evidenceQuote,
-          verified: match
+          verified
         }
       ]
     };
   });
 
-  // Calculate overall readiness
+  // Calculate overall readiness based on tested skills and benchmarks
   const totalScore = skills.reduce((acc, s) => acc + (s.estimatedLevel / s.targetBenchmark), 0);
   const readinessPercentage = Math.min(95, Math.round((totalScore / skills.length) * 100 * 0.75));
+
+  // Determine if a critical diagnostic failure occurred and prioritize it in Week 1
+  const failedDiag = diagnosticSubmissions?.find(s => !s.isCorrect);
 
   // Build tailored roadmap with level-based Capstone Projects
   const roadmap: RoadmapMilestone[] = benchmark.curatedMilestones.map((m, idx) => {
     const isBeginner = experienceLevel.toLowerCase().includes('student') || experienceLevel.toLowerCase().includes('junior');
     const capstoneDifficulty = isBeginner ? 'beginner' : 'intermediate';
 
+    // If milestone matches failed diagnostic skill, make it Week 1 priority
+    const isDiagnosedGap = failedDiag && m.skillFocus.toLowerCase().includes(failedDiag.skillName.toLowerCase().split(' ')[0]);
+
     return {
       id: `m-custom-${idx + 1}`,
       weekNumber: m.weekNumber,
-      title: m.title,
-      objective: m.objective,
+      title: isDiagnosedGap ? `⚡ ${m.title} (Diagnosed Prerequisite Gap)` : m.title,
+      objective: isDiagnosedGap
+        ? `Remediate tested diagnostic difficulty in ${m.skillFocus} with focused foundation and interactive query practice.`
+        : m.objective,
       skillFocus: m.skillFocus,
-      priority: idx === 0 ? 'critical' : 'high',
+      priority: idx === 0 || isDiagnosedGap ? 'critical' : 'high',
       status: idx === 0 ? 'active' : 'upcoming',
-      isRecoveryModule: false,
+      isRecoveryModule: Boolean(isDiagnosedGap && idx === 0),
       estimatedMinutes: dailyCommitment * 4,
       tasks: m.tasks.map((taskTitle, tIdx) => ({
         id: `task-c-${idx}-${tIdx}`,
@@ -337,7 +480,7 @@ export function generateCustomLearnerProfile(
     dailyCommitmentMinutes: dailyCommitment,
     readinessPercentage,
     streakDays: 1,
-    xpPoints: 100,
+    xpPoints: diagnosticSubmissions ? diagnosticSubmissions.filter(s => s.isCorrect).length * 50 : 100,
     resumeParsed: true,
     extractedRawProjects: 2,
     skills,

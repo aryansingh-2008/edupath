@@ -17,7 +17,7 @@ import {
 } from '../data/seedData';
 import { executeAdaptiveReplanning } from '../lib/agents/adaptiveAgent';
 import { getContextualMentorResponse } from '../lib/agents/mentorAgent';
-import { generateCustomLearnerProfile } from '../lib/agents/customPathGenerator';
+import { generateCustomLearnerProfile, DiagnosticSubmission } from '../lib/agents/customPathGenerator';
 import confetti from 'canvas-confetti';
 
 interface EduPathContextType {
@@ -28,7 +28,8 @@ interface EduPathContextType {
     skillsInput?: string,
     dailyMinutes?: number,
     experienceLevel?: string,
-    careerGoal?: string
+    careerGoal?: string,
+    diagnosticSubmissions?: DiagnosticSubmission[]
   ) => void;
   createAccount: (
     fullName: string,
@@ -37,7 +38,8 @@ interface EduPathContextType {
     skillsInput?: string,
     dailyMinutes?: number,
     experienceLevel?: string,
-    careerGoal?: string
+    careerGoal?: string,
+    diagnosticSubmissions?: DiagnosticSubmission[]
   ) => void;
   logout: () => void;
   profile: LearnerProfile;
@@ -120,7 +122,8 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     skillsInput: string = '',
     dailyMinutes: number = 30,
     experienceLevel: string = 'Junior (1-2 yrs)',
-    careerGoal: string = ''
+    careerGoal: string = '',
+    diagnosticSubmissions?: DiagnosticSubmission[]
   ) => {
     const cleanName = username.trim() || 'Admin';
     if (typeof window !== 'undefined') {
@@ -137,7 +140,8 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
       isAdmin ? 'JavaScript, React, Node.js' : skillsInput,
       dailyMinutes,
       experienceLevel,
-      careerGoal
+      careerGoal,
+      diagnosticSubmissions
     );
     setProfile(customProfile);
     setRoadmap(customRoadmap);
@@ -153,9 +157,10 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     skillsInput: string = '',
     dailyMinutes: number = 30,
     experienceLevel: string = 'Junior (1-2 yrs)',
-    careerGoal: string = ''
+    careerGoal: string = '',
+    diagnosticSubmissions?: DiagnosticSubmission[]
   ) => {
-    login(fullName || email, roleName, skillsInput, dailyMinutes, experienceLevel, careerGoal);
+    login(fullName || email, roleName, skillsInput, dailyMinutes, experienceLevel, careerGoal, diagnosticSubmissions);
   };
 
   const analyzeCapabilityText = (
