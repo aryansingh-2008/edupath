@@ -14,6 +14,9 @@ import { DemoControlBar } from '../components/DemoControlBar';
 import { CustomProfileModal } from '../components/CustomProfileModal';
 import { LoginPage } from '../components/LoginPage';
 import { PracticeLabView } from '../components/PracticeLabView';
+import { OverviewDashboard } from '../components/OverviewDashboard';
+import { ProgressReportView } from '../components/ProgressReportView';
+import { CapabilityAnalyzerModal } from '../components/CapabilityAnalyzerModal';
 
 function EduPathAppContent() {
   const { isAuthenticated, activeTab, setActiveTab, isCustomModalOpen, setIsCustomModalOpen } = useEduPath();
@@ -40,21 +43,22 @@ function EduPathAppContent() {
   }
 
   if (activeTab === 'landing') {
-    return <LandingPage onEnterApp={() => setActiveTab('path')} />;
+    return <LandingPage onEnterApp={() => setActiveTab('overview')} />;
   }
 
   return (
     <CareerOSShell>
-      
-      {(activeTab === 'path' || activeTab === 'overview') && <AdaptiveRoadmapView />}
+      {activeTab === 'overview' && <OverviewDashboard />}
+      {activeTab === 'path' && <AdaptiveRoadmapView />}
       {(activeTab === 'gaps' || activeTab === 'skills' || activeTab === 'readiness') && <SkillGapView />}
-      {activeTab === 'mentor' && <AIMentorView />}
       {activeTab === 'practice' && <PracticeLabView />}
+      {activeTab === 'progress' && <ProgressReportView />}
+      {activeTab === 'mentor' && <AIMentorView />}
 
-      
       <WhyPlanChangedModal />
       <AgentActivityDrawer />
       <OnboardingModal />
+      <CapabilityAnalyzerModal />
       <CustomProfileModal isOpen={isCustomModalOpen} onClose={() => setIsCustomModalOpen(false)} />
       <DemoControlBar />
     </CareerOSShell>

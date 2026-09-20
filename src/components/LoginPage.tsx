@@ -34,6 +34,8 @@ export const LoginPage: React.FC<{
   const [email, setEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [targetRole, setTargetRole] = useState('AI / ML Engineer');
+  const [careerGoal, setCareerGoal] = useState('Land an engineering role within 4 months');
+  const [experienceLevel, setExperienceLevel] = useState('Junior (1-2 yrs)');
   const [skillsText, setSkillsText] = useState('');
   const [dailyMinutes, setDailyMinutes] = useState(30);
 
@@ -76,7 +78,7 @@ export const LoginPage: React.FC<{
       confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
     } catch {}
 
-    createAccount(fullName, email, targetRole, skillsText, dailyMinutes);
+    createAccount(fullName, email, targetRole, skillsText, dailyMinutes, experienceLevel, careerGoal);
   };
 
 
@@ -290,7 +292,7 @@ export const LoginPage: React.FC<{
               <div className="space-y-1.5">
                 <label className="font-semibold text-slate-300 flex items-center gap-1.5">
                   <Briefcase className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Target Career Goal</span>
+                  <span>Target Career Role</span>
                 </label>
                 <select
                   value={targetRole}
@@ -301,6 +303,34 @@ export const LoginPage: React.FC<{
                   <option value="Full Stack Developer">Full Stack Developer</option>
                   <option value="Data Scientist">Data Scientist</option>
                 </select>
+              </div>
+
+              {/* EXPERIENCE LEVEL & CAREER GOAL */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-slate-300">Experience Level</label>
+                  <select
+                    value={experienceLevel}
+                    onChange={e => setExperienceLevel(e.target.value)}
+                    className="w-full bg-black/40 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-blue-500 transition text-xs"
+                  >
+                    <option value="Student / Final Year">Student / Final Year</option>
+                    <option value="Junior (1-2 yrs)">Junior (1-2 yrs)</option>
+                    <option value="Mid-Level Professional">Mid-Level Professional</option>
+                    <option value="Career Switcher">Career Switcher</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-slate-300">Career Goal</label>
+                  <input
+                    type="text"
+                    value={careerGoal}
+                    onChange={e => setCareerGoal(e.target.value)}
+                    placeholder="e.g. Land a job in 4 months"
+                    className="w-full bg-black/40 border border-slate-800 rounded-xl px-3 py-2 text-white placeholder:text-slate-600 outline-none focus:border-blue-500 transition text-xs"
+                  />
+                </div>
               </div>
 
               {/* KNOWN SKILLS (QUICK TAGS) */}

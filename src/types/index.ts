@@ -7,7 +7,7 @@ export type QuestionType = 'mcq' | 'debugging' | 'coding' | 'scenario';
 export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
 
 export interface SkillEvidence {
-  source: 'resume' | 'project' | 'practice' | 'certificate';
+  source: 'resume' | 'project' | 'practice' | 'certificate' | 'portfolio';
   quote: string;
   verified: boolean;
   timestamp?: string;
@@ -146,6 +146,7 @@ export interface LearnerProfile {
   avatarInitial: string;
   tagline: string;
   targetRole: string;
+  careerGoal?: string;
   experienceLevel: string;
   learningPreference: string;
   dailyCommitmentMinutes: number;

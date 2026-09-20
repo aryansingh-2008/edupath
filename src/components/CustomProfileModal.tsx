@@ -10,6 +10,8 @@ export const CustomProfileModal: React.FC<{ isOpen: boolean; onClose: () => void
   const { setCustomProfileAndRoadmap, setActiveTab } = useEduPath();
   const [userName, setUserName] = useState('');
   const [targetRole, setTargetRole] = useState('Full Stack Developer');
+  const [careerGoal, setCareerGoal] = useState('Land a production engineering role within 4 months');
+  const [experienceLevel, setExperienceLevel] = useState('Junior (1-2 yrs)');
   const [skillsText, setSkillsText] = useState('');
   const [timeCommitment, setTimeCommitment] = useState(30);
 
@@ -26,7 +28,9 @@ export const CustomProfileModal: React.FC<{ isOpen: boolean; onClose: () => void
       userName,
       targetRole,
       skillsText,
-      timeCommitment
+      timeCommitment,
+      experienceLevel,
+      careerGoal
     );
 
     // Update global store with custom profile and custom roadmap
@@ -99,6 +103,38 @@ export const CustomProfileModal: React.FC<{ isOpen: boolean; onClose: () => void
                 <option key={r} value={r}>{r}</option>
               ))}
             </select>
+          </div>
+
+          {/* EXPERIENCE LEVEL & CAREER GOAL */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="font-semibold text-slate-300 flex items-center gap-1.5">
+                <span>Experience Level</span>
+              </label>
+              <select
+                value={experienceLevel}
+                onChange={e => setExperienceLevel(e.target.value)}
+                className="w-full bg-black/40 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-blue-500 transition text-xs"
+              >
+                <option value="Student / Final Year">Student / Final Year</option>
+                <option value="Junior (1-2 yrs)">Junior (1-2 yrs)</option>
+                <option value="Mid-Level Professional">Mid-Level Professional</option>
+                <option value="Career Switcher">Career Switcher</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="font-semibold text-slate-300 flex items-center gap-1.5">
+                <span>Career Goal</span>
+              </label>
+              <input
+                type="text"
+                value={careerGoal}
+                onChange={e => setCareerGoal(e.target.value)}
+                placeholder="e.g. Land a role in 4 months"
+                className="w-full bg-black/40 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder:text-slate-600 outline-none focus:border-blue-500 transition text-xs"
+              />
+            </div>
           </div>
 
           

@@ -14,7 +14,9 @@ import {
   CheckCircle2,
   XCircle,
   Award,
-  ArrowRight
+  ArrowRight,
+  FolderGit2,
+  Target
 } from 'lucide-react';
 import { COMPREHENSIVE_QUESTION_BANK } from '../data/questionBank';
 import { PracticeQuestion, RoadmapMilestone } from '../types';
@@ -98,8 +100,13 @@ export const AdaptiveRoadmapView: React.FC = () => {
             </span>
           </div>
           <p className="text-xs text-slate-400">
-            Pacing: {profile.dailyCommitmentMinutes} min/day &bull; Personalized adaptive sequence
+            Pacing: {profile.dailyCommitmentMinutes} min/day &bull; Level: <strong className="text-slate-200">{profile.experienceLevel}</strong> &bull; Personalized adaptive sequence
           </p>
+          {profile.careerGoal && (
+            <p className="text-xs text-blue-300 font-medium">
+              🎯 Goal: {profile.careerGoal}
+            </p>
+          )}
         </div>
 
         <button
@@ -246,9 +253,15 @@ export const AdaptiveRoadmapView: React.FC = () => {
                 </div>
               </div>
 
-              <p className="text-xs text-slate-300 mb-4 leading-relaxed">
-                {milestone.objective}
-              </p>
+              <div className="mb-4 p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 space-y-1">
+                <div className="flex items-center gap-1.5 text-blue-400 font-bold text-[10px] uppercase tracking-wider">
+                  <Target className="w-3.5 h-3.5" />
+                  <span>Structured Learning Objective</span>
+                </div>
+                <p className="text-xs text-slate-200 leading-relaxed font-medium">
+                  {milestone.objective}
+                </p>
+              </div>
 
               
               <div className="space-y-2 mb-4 bg-black/30 p-3.5 rounded-xl border border-slate-800/80">
@@ -398,7 +411,57 @@ export const AdaptiveRoadmapView: React.FC = () => {
                 );
               })()}
 
-              
+              {/* LEVEL-BASED CAPSTONE PROJECT IDEA */}
+              {milestone.capstoneProject && (
+                <div className="mb-4 p-4 rounded-2xl bg-gradient-to-br from-[#101528] to-[#151c35] border border-indigo-500/30 space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                        <FolderGit2 className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">
+                        Level-Based Capstone: {milestone.capstoneProject.title}
+                      </span>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 capitalize">
+                      {milestone.capstoneProject.difficulty} Level
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    {milestone.capstoneProject.goal}
+                  </p>
+
+                  <div className="space-y-2 pt-2 border-t border-slate-800/80 text-xs">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase mr-1">Recommended Stack:</span>
+                      {milestone.capstoneProject.techStack.map((tech, tIdx) => (
+                        <span key={tIdx} className="px-2 py-0.5 rounded-md bg-black/40 border border-slate-800 text-[10px] font-mono text-indigo-300">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase block">Implementation Steps:</span>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] text-slate-300">
+                        {milestone.capstoneProject.requirements.map((req, rIdx) => (
+                          <li key={rIdx} className="flex items-start gap-1.5">
+                            <span className="text-indigo-400 font-bold">&bull;</span>
+                            <span>{req}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-slate-400 pt-1">
+                      <span className="font-semibold text-emerald-400">Success Verification:</span>
+                      <span>{milestone.capstoneProject.evaluationCriteria.join(' • ')}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-black/40 border border-slate-800 text-xs gap-3">
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">

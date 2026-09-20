@@ -215,7 +215,9 @@ export function generateCustomLearnerProfile(
   userName: string,
   targetRoleName: string,
   userSkillsInput: string,
-  dailyCommitment: number = 30
+  dailyCommitment: number = 30,
+  experienceLevel: string = 'Junior (1-2 yrs)',
+  careerGoal: string = ''
 ): {
   profile: LearnerProfile;
   roadmap: RoadmapMilestone[];
@@ -269,36 +271,59 @@ export function generateCustomLearnerProfile(
   const totalScore = skills.reduce((acc, s) => acc + (s.estimatedLevel / s.targetBenchmark), 0);
   const readinessPercentage = Math.min(95, Math.round((totalScore / skills.length) * 100 * 0.75));
 
-  // Build tailored roadmap
-  const roadmap: RoadmapMilestone[] = benchmark.curatedMilestones.map((m, idx) => ({
-    id: `m-custom-${idx + 1}`,
-    weekNumber: m.weekNumber,
-    title: m.title,
-    objective: m.objective,
-    skillFocus: m.skillFocus,
-    priority: idx === 0 ? 'critical' : 'high',
-    status: idx === 0 ? 'active' : 'upcoming',
-    isRecoveryModule: false,
-    estimatedMinutes: dailyCommitment * 4,
-    tasks: m.tasks.map((taskTitle, tIdx) => ({
-      id: `task-c-${idx}-${tIdx}`,
-      title: taskTitle,
-      type: tIdx === 1 ? 'quiz' : tIdx === 2 ? 'coding' : 'reading',
-      durationMinutes: Math.round(dailyCommitment * 0.7),
-      done: idx === 0 && tIdx === 0
-    })),
-    resource: {
-      id: `res-c-${idx}`,
-      title: m.resourceTitle,
-      url: m.resourceUrl,
-      source: m.source,
-      type: m.resourceType,
-      difficulty: idx === 0 ? 'beginner' : 'intermediate',
-      estimatedMinutes: dailyCommitment,
-      skillId: `skill-${idx}`,
-      whyRecommended: `Essential industry standard resource to close your ${m.skillFocus} gap.`
-    }
-  }));
+  // Build tailored roadmap with level-based Capstone Projects
+  const roadmap: RoadmapMilestone[] = benchmark.curatedMilestones.map((m, idx) => {
+    const isBeginner = experienceLevel.toLowerCase().includes('student') || experienceLevel.toLowerCase().includes('junior');
+    const capstoneDifficulty = isBeginner ? 'beginner' : 'intermediate';
+
+    return {
+      id: `m-custom-${idx + 1}`,
+      weekNumber: m.weekNumber,
+      title: m.title,
+      objective: m.objective,
+      skillFocus: m.skillFocus,
+      priority: idx === 0 ? 'critical' : 'high',
+      status: idx === 0 ? 'active' : 'upcoming',
+      isRecoveryModule: false,
+      estimatedMinutes: dailyCommitment * 4,
+      tasks: m.tasks.map((taskTitle, tIdx) => ({
+        id: `task-c-${idx}-${tIdx}`,
+        title: taskTitle,
+        type: tIdx === 1 ? 'quiz' : tIdx === 2 ? 'coding' : 'reading',
+        durationMinutes: Math.round(dailyCommitment * 0.7),
+        done: idx === 0 && tIdx === 0
+      })),
+      resource: {
+        id: `res-c-${idx}`,
+        title: m.resourceTitle,
+        url: m.resourceUrl,
+        source: m.source,
+        type: m.resourceType,
+        difficulty: idx === 0 ? 'beginner' : 'intermediate',
+        estimatedMinutes: dailyCommitment,
+        skillId: `skill-${idx}`,
+        whyRecommended: `Essential industry standard resource to close your ${m.skillFocus} gap.`
+      },
+      capstoneProject: {
+        id: `proj-custom-${idx + 1}`,
+        title: `${m.skillFocus} Production Capstone`,
+        goal: `Construct an industry-standard solution applying ${m.skillFocus} to solve real-world problems in ${targetRoleName}.`,
+        skillsTrained: [m.skillFocus, targetRoleName],
+        requirements: [
+          `Architect core modular components for ${m.skillFocus}`,
+          'Implement unit test assertions validating business edge cases',
+          'Optimize execution latency and adhere to production security standards'
+        ],
+        techStack: [targetRoleName.includes('AI') || targetRoleName.includes('Data') ? 'Python' : 'Node.js / React', 'Git', 'Docker'],
+        evaluationCriteria: [
+          'Passes automated test assertions with zero runtime exceptions',
+          'Clean modular architectural separation',
+          'Documented README with setup and verification steps'
+        ],
+        difficulty: capstoneDifficulty
+      }
+    };
+  });
 
   const profile: LearnerProfile = {
     id: `user-${Date.now()}`,
@@ -306,7 +331,8 @@ export function generateCustomLearnerProfile(
     avatarInitial: (userName.trim()[0] || 'U').toUpperCase(),
     tagline: `Targeting: ${targetRoleName}`,
     targetRole: targetRoleName,
-    experienceLevel: 'Custom Path',
+    careerGoal: careerGoal || `Master ${targetRoleName} competencies and transition to a high-impact role.`,
+    experienceLevel: experienceLevel || 'Junior (1-2 yrs)',
     learningPreference: 'Hands-on Coding & Interactive',
     dailyCommitmentMinutes: dailyCommitment,
     readinessPercentage,

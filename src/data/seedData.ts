@@ -8,6 +8,7 @@ export const INITIAL_ALEX_PROFILE: LearnerProfile = {
   avatarInitial: 'A',
   tagline: 'Junior Frontend Dev aspiring to Full Stack Engineer',
   targetRole: 'Full Stack Developer',
+  careerGoal: 'Transition to a production Full Stack Developer at a high-growth tech company within 4 months.',
   experienceLevel: 'Junior (1.5 yrs)',
   learningPreference: 'Coding & Projects',
   dailyCommitmentMinutes: 30,
@@ -139,6 +140,25 @@ export const INITIAL_ROADMAP_ALEX: RoadmapMilestone[] = [
       estimatedMinutes: 45,
       skillId: 'sql',
       whyRecommended: 'Industry standard documentation with zero third-party bias.'
+    },
+    capstoneProject: {
+      id: 'proj-sql-1',
+      title: 'E-Commerce Relational Data Ledger',
+      goal: 'Design a 3NF normalized multi-table database schema with Users, Orders, LineItems, and Products, implementing complex SQL JOIN analytical queries.',
+      skillsTrained: ['SQL & Relational DB', 'Database Normalization', 'Query Optimization'],
+      requirements: [
+        'Multi-table relational schema with foreign key cascades',
+        'Complex JOIN queries calculating monthly spend aggregations',
+        'Parameterization to prevent SQL injection vulnerabilities',
+        'EXPLAIN ANALYZE verification ensuring index usage'
+      ],
+      techStack: ['PostgreSQL', 'Docker', 'DBeaver / pgAdmin'],
+      evaluationCriteria: [
+        '100% data integrity with valid constraints',
+        'Sub-15ms query execution speed on 10,000 synthetic rows',
+        'Clear normalization documentation'
+      ],
+      difficulty: 'beginner'
     }
   },
   {
@@ -166,6 +186,25 @@ export const INITIAL_ROADMAP_ALEX: RoadmapMilestone[] = [
       estimatedMinutes: 35,
       skillId: 'node',
       whyRecommended: 'Canonical guide for structuring maintainable server-side endpoints.'
+    },
+    capstoneProject: {
+      id: 'proj-node-2',
+      title: 'Secure Multi-Tenant Auth & REST Microservice',
+      goal: 'Construct an authenticated Express API backed by PostgreSQL connection pooling, JWT tokens, and automated integration tests.',
+      skillsTrained: ['Node.js & Express', 'REST Architecture', 'JWT Authentication'],
+      requirements: [
+        'User registration and login endpoints with bcrypt password hashing',
+        'JWT bearer token verification middleware with role-based access',
+        'PostgreSQL connection pool handling concurrent queries',
+        'Modular routes, controllers, and centralized error handler'
+      ],
+      techStack: ['Node.js', 'Express', 'PostgreSQL', 'Jest', 'Supertest'],
+      evaluationCriteria: [
+        'Passing automated integration tests for all status codes (200, 400, 401, 404)',
+        'Zero leaked stack traces in production error handler',
+        'Graceful connection pool shutdown'
+      ],
+      difficulty: 'intermediate'
     }
   },
   {

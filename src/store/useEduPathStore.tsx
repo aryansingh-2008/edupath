@@ -7,7 +7,8 @@ import {
   AdaptiveDecision,
   AgentRunLog,
   ChatMessage,
-  AppView
+  AppView,
+  Skill
 } from '../types';
 import {
   INITIAL_ALEX_PROFILE,
@@ -21,8 +22,23 @@ import confetti from 'canvas-confetti';
 
 interface EduPathContextType {
   isAuthenticated: boolean;
-  login: (username: string, role?: string, skillsInput?: string, dailyMinutes?: number) => void;
-  createAccount: (fullName: string, email: string, role: string, skillsInput?: string, dailyMinutes?: number) => void;
+  login: (
+    username: string,
+    role?: string,
+    skillsInput?: string,
+    dailyMinutes?: number,
+    experienceLevel?: string,
+    careerGoal?: string
+  ) => void;
+  createAccount: (
+    fullName: string,
+    email: string,
+    role: string,
+    skillsInput?: string,
+    dailyMinutes?: number,
+    experienceLevel?: string,
+    careerGoal?: string
+  ) => void;
   logout: () => void;
   profile: LearnerProfile;
   activeTab: AppView;
@@ -48,6 +64,15 @@ interface EduPathContextType {
   setIsOnboardingOpen: (open: boolean) => void;
   isCustomModalOpen: boolean;
   setIsCustomModalOpen: (open: boolean) => void;
+  isAnalyzerOpen: boolean;
+  setIsAnalyzerOpen: (open: boolean) => void;
+  isJudgeMode: boolean;
+  setIsJudgeMode: (val: boolean) => void;
+  toggleJudgeMode: () => void;
+  analyzeCapabilityText: (
+    text: string,
+    source: 'resume' | 'portfolio' | 'certificate' | 'project'
+  ) => { detectedSkills: string[]; updatedSkillsCount: number; newReadiness: number };
   solvedQuestionIds: string[];
   submitQuizAnswer: (
     questionId: string,
@@ -82,14 +107,20 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isWhyPlanChangedModalOpen, setIsWhyPlanChangedModalOpen] = useState<boolean>(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
+  const [isAnalyzerOpen, setIsAnalyzerOpen] = useState<boolean>(false);
+  const [isJudgeMode, setIsJudgeMode] = useState<boolean>(true);
   const [activeMissionModal, setActiveMissionModal] = useState<boolean>(false);
   const [solvedQuestionIds, setSolvedQuestionIds] = useState<string[]>([]);
+
+  const toggleJudgeMode = () => setIsJudgeMode(prev => !prev);
 
   const login = (
     username: string,
     roleName: string = 'Full Stack Developer',
     skillsInput: string = '',
-    dailyMinutes: number = 30
+    dailyMinutes: number = 30,
+    experienceLevel: string = 'Junior (1-2 yrs)',
+    careerGoal: string = ''
   ) => {
     const cleanName = username.trim() || 'Admin';
     if (typeof window !== 'undefined') {
@@ -98,17 +129,21 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsAuthenticated(true);
 
     const isAdmin = cleanName.toLowerCase() === 'admin';
+    setIsJudgeMode(isAdmin);
+
     const { profile: customProfile, roadmap: customRoadmap } = generateCustomLearnerProfile(
       cleanName,
       roleName,
       isAdmin ? 'JavaScript, React, Node.js' : skillsInput,
-      dailyMinutes
+      dailyMinutes,
+      experienceLevel,
+      careerGoal
     );
     setProfile(customProfile);
     setRoadmap(customRoadmap);
     setBottleneckDetected(false);
     setLatestDecision(null);
-    setActiveTab('path');
+    setActiveTab('overview');
   };
 
   const createAccount = (
@@ -116,9 +151,81 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     email: string,
     roleName: string,
     skillsInput: string = '',
-    dailyMinutes: number = 30
+    dailyMinutes: number = 30,
+    experienceLevel: string = 'Junior (1-2 yrs)',
+    careerGoal: string = ''
   ) => {
-    login(fullName || email, roleName, skillsInput, dailyMinutes);
+    login(fullName || email, roleName, skillsInput, dailyMinutes, experienceLevel, careerGoal);
+  };
+
+  const analyzeCapabilityText = (
+    text: string,
+    source: 'resume' | 'portfolio' | 'certificate' | 'project'
+  ) => {
+    const lower = text.toLowerCase();
+    const sentences = text.split(/[.\n;]+/).map(s => s.trim()).filter(s => s.length > 5);
+
+    const detected: string[] = [];
+    const updatedSkills = profile.skills.map(s => {
+      const skillNameLower = s.name.toLowerCase();
+      const tokens = skillNameLower.split(/[\s&/(),]+/).filter(t => t.length > 2);
+      const isPresent = tokens.some(t => lower.includes(t));
+
+      if (isPresent) {
+        detected.push(s.name);
+        const matchedSentence = sentences.find(sent => tokens.some(t => sent.toLowerCase().includes(t))) || `Demonstrated competency in ${s.name} via ${source} submission.`;
+        const newLevel = Math.min(0.95, Math.max(s.estimatedLevel, 0.75 + Math.random() * 0.15));
+        return {
+          ...s,
+          estimatedLevel: Math.round(newLevel * 100) / 100,
+          confidence: 0.90,
+          status: (newLevel >= s.targetBenchmark ? 'mastered' : 'developing') as Skill['status'],
+          evidence: [
+            {
+              source,
+              quote: matchedSentence.slice(0, 180),
+              verified: true,
+              timestamp: 'Verified by Profile Agent'
+            },
+            ...s.evidence
+          ]
+        };
+      }
+      return s;
+    });
+
+    const totalScore = updatedSkills.reduce((acc, s) => acc + (s.estimatedLevel / s.targetBenchmark), 0);
+    const newReadiness = Math.min(98, Math.round((totalScore / updatedSkills.length) * 100 * 0.75));
+
+    setProfile(prev => ({
+      ...prev,
+      skills: updatedSkills,
+      readinessPercentage: newReadiness,
+      resumeParsed: true,
+      extractedRawProjects: prev.extractedRawProjects + 1
+    }));
+
+    const newRun: AgentRunLog = {
+      id: `run-${Date.now()}`,
+      agentName: 'Profile Agent',
+      status: 'success',
+      durationMs: 420,
+      inputSummary: `Parsed ${source} input (${text.length} chars). Extracted ${detected.length} capability signals.`,
+      outputSummary: `Verified evidence for: ${detected.join(', ') || 'Identified technical competencies'}. New readiness: ${newReadiness}%.`,
+      confidence: 0.94,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setAgentRuns(prev => [newRun, ...prev]);
+
+    try {
+      confetti({ particleCount: 75, spread: 70, origin: { y: 0.6 } });
+    } catch {}
+
+    return {
+      detectedSkills: detected,
+      updatedSkillsCount: detected.length,
+      newReadiness
+    };
   };
 
   const logout = () => {
@@ -452,6 +559,12 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setIsOnboardingOpen,
         isCustomModalOpen,
         setIsCustomModalOpen,
+        isAnalyzerOpen,
+        setIsAnalyzerOpen,
+        isJudgeMode,
+        setIsJudgeMode,
+        toggleJudgeMode,
+        analyzeCapabilityText,
         solvedQuestionIds,
         submitQuizAnswer,
         updateProfile,
