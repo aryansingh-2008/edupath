@@ -13,6 +13,7 @@ import { OnboardingModal } from '../components/OnboardingModal';
 import { DemoControlBar } from '../components/DemoControlBar';
 import { CustomProfileModal } from '../components/CustomProfileModal';
 import { LoginPage } from '../components/LoginPage';
+import { PracticeLabView } from '../components/PracticeLabView';
 
 function EduPathAppContent() {
   const { isAuthenticated, activeTab, setActiveTab, isCustomModalOpen, setIsCustomModalOpen } = useEduPath();
@@ -48,6 +49,7 @@ function EduPathAppContent() {
       {(activeTab === 'path' || activeTab === 'overview') && <AdaptiveRoadmapView />}
       {(activeTab === 'gaps' || activeTab === 'skills' || activeTab === 'readiness') && <SkillGapView />}
       {activeTab === 'mentor' && <AIMentorView />}
+      {activeTab === 'practice' && <PracticeLabView />}
 
       
       <WhyPlanChangedModal />

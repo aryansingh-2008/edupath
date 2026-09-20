@@ -5,6 +5,7 @@ import { useEduPath } from '../store/useEduPathStore';
 import {
   Compass,
   MapPin,
+  FileCode2,
   Bot,
   Sparkles,
   AlertTriangle,
@@ -25,6 +26,7 @@ export const CareerOSShell: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const navItems: { id: AppView; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'path', label: 'Roadmap', icon: MapPin },
+    { id: 'practice', label: 'Diagnostic Quiz', icon: FileCode2 },
     { id: 'gaps', label: 'Skill Gaps & Readiness', icon: AlertTriangle },
     { id: 'mentor', label: 'AI Mentor', icon: Bot }
   ];

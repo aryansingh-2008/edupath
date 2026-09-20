@@ -13,9 +13,11 @@ import {
   HelpCircle,
   CheckCircle2,
   XCircle,
-  Award
+  Award,
+  ArrowRight
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { COMPREHENSIVE_QUESTION_BANK } from '../data/questionBank';
+import { PracticeQuestion, RoadmapMilestone } from '../types';
 
 export const AdaptiveRoadmapView: React.FC = () => {
   const {
@@ -25,34 +27,54 @@ export const AdaptiveRoadmapView: React.FC = () => {
     latestDecision,
     simulateTaskCompletion,
     simulateSqlStruggle,
+    submitQuizAnswer,
+    setActiveTab,
     resetDemo,
     setIsWhyPlanChangedModalOpen,
     setIsCustomModalOpen
   } = useEduPath();
 
-  // Inline diagnostic quiz state
-  const [selectedQuizOption, setSelectedQuizOption] = useState<number | null>(null);
-  const [quizSubmitted, setQuizSubmitted] = useState<boolean>(false);
+  // Inline diagnostic quiz state per milestone
+  const [selectedQuizOption, setSelectedQuizOption] = useState<Record<string, number | null>>({});
+  const [quizSubmitted, setQuizSubmitted] = useState<Record<string, boolean>>({});
+  const [quizFeedback, setQuizFeedback] = useState<Record<string, { isCorrect: boolean; xpAwarded: number; firstTime: boolean }>>({});
 
-  const handleQuizSubmit = () => {
-    if (selectedQuizOption === null) return;
-    setQuizSubmitted(true);
-
-    if (selectedQuizOption === 1) {
-      try {
-        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
-      } catch {}
-      simulateTaskCompletion();
-    } else {
-      if (!bottleneckDetected) {
-        simulateSqlStruggle();
-      }
+  const getMilestoneQuestion = (milestone: RoadmapMilestone, isRecovery: boolean): PracticeQuestion => {
+    if (isRecovery) {
+      return COMPREHENSIVE_QUESTION_BANK.find(q => q.id === 'q-sql-2') || COMPREHENSIVE_QUESTION_BANK[1];
     }
+    const skill = milestone.skillFocus?.toLowerCase() || '';
+    if (skill.includes('sql') || skill.includes('database')) {
+      return COMPREHENSIVE_QUESTION_BANK.find(q => q.id === 'q-sql-1') || COMPREHENSIVE_QUESTION_BANK[0];
+    }
+    if (skill.includes('node') || skill.includes('express') || skill.includes('api')) {
+      return COMPREHENSIVE_QUESTION_BANK.find(q => q.id === 'q-node-1') || COMPREHENSIVE_QUESTION_BANK[17];
+    }
+    if (skill.includes('system') || skill.includes('scale') || skill.includes('design')) {
+      return COMPREHENSIVE_QUESTION_BANK.find(q => q.id === 'q-sys-1') || COMPREHENSIVE_QUESTION_BANK[24];
+    }
+    return COMPREHENSIVE_QUESTION_BANK.find(q => q.id === 'q-js-1') || COMPREHENSIVE_QUESTION_BANK[7];
   };
 
-  const handleQuizReset = () => {
-    setSelectedQuizOption(null);
-    setQuizSubmitted(false);
+  const handleMilestoneQuizSubmit = (milestoneId: string, question: PracticeQuestion) => {
+    const selected = selectedQuizOption[milestoneId];
+    if (selected === undefined || selected === null) return;
+
+    const isCorrect = selected === question.correctIndex;
+    const result = submitQuizAnswer(question.id, selected, isCorrect, 50);
+
+    setQuizSubmitted(prev => ({ ...prev, [milestoneId]: true }));
+    setQuizFeedback(prev => ({ ...prev, [milestoneId]: result }));
+  };
+
+  const handleMilestoneQuizReset = (milestoneId: string) => {
+    setSelectedQuizOption(prev => ({ ...prev, [milestoneId]: null }));
+    setQuizSubmitted(prev => ({ ...prev, [milestoneId]: false }));
+    setQuizFeedback(prev => {
+      const copy = { ...prev };
+      delete copy[milestoneId];
+      return copy;
+    });
   };
 
   return (
@@ -258,103 +280,123 @@ export const AdaptiveRoadmapView: React.FC = () => {
                 ))}
               </div>
 
-              {/* INLINE DIAGNOSTIC CHALLENGE (ON ACTIVE MILESTONE) */}
-              {milestone.status === 'active' && !isRecovery && (
-                <div className="mb-4 p-4 rounded-xl bg-blue-950/20 border border-blue-500/30 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <HelpCircle className="w-4 h-4 text-blue-400" />
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">
-                        Diagnostic Knowledge Check
+              {/* INLINE DIAGNOSTIC CHALLENGE (ON ACTIVE MILESTONE OR RECOVERY MODULE) */}
+              {(milestone.status === 'active' || isRecovery) && (() => {
+                const q = getMilestoneQuestion(milestone, isRecovery);
+                const isSubmitted = quizSubmitted[milestone.id];
+                const selected = selectedQuizOption[milestone.id];
+                const fb = quizFeedback[milestone.id];
+
+                return (
+                  <div className="mb-4 p-4 rounded-2xl bg-blue-950/25 border border-blue-500/30 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <HelpCircle className="w-4 h-4 text-blue-400" />
+                        <span className="text-xs font-bold text-white uppercase tracking-wider">
+                          Diagnostic Knowledge Check: {q.skillName}
+                        </span>
+                      </div>
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">
+                        {q.difficulty} &bull; +50 XP on Correct Answer
                       </span>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-semibold">
-                      Diagnostic Telemetry
-                    </span>
-                  </div>
 
-                  <p className="text-xs text-slate-200 font-medium">
-                    Which SQL JOIN returns all records from the left table and only matched records from the right table?
-                  </p>
+                    <p className="text-xs text-slate-200 font-semibold whitespace-pre-line leading-relaxed">
+                      {q.prompt}
+                    </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    {[
-                      'INNER JOIN',
-                      'LEFT OUTER JOIN',
-                      'FULL JOIN',
-                      'CROSS JOIN'
-                    ].map((opt, optIdx) => {
-                      const isSelected = selectedQuizOption === optIdx;
-                      const isCorrect = optIdx === 1;
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                      {q.options.map((opt, optIdx) => {
+                        const isSelected = selected === optIdx;
+                        const isCorrect = optIdx === q.correctIndex;
 
-                      let btnStyle = 'border-slate-800 bg-black/40 text-slate-300 hover:border-slate-700';
-                      if (quizSubmitted) {
-                        if (isCorrect) {
-                          btnStyle = 'border-emerald-500 bg-emerald-950/40 text-emerald-200';
-                        } else if (isSelected && !isCorrect) {
-                          btnStyle = 'border-rose-500 bg-rose-950/40 text-rose-200';
+                        let btnStyle = 'border-slate-800 bg-black/40 text-slate-300 hover:border-slate-700 hover:bg-white/5';
+                        if (isSubmitted) {
+                          if (isCorrect) {
+                            btnStyle = 'border-emerald-500 bg-emerald-950/50 text-emerald-200 font-semibold ring-1 ring-emerald-500/50';
+                          } else if (isSelected && !isCorrect) {
+                            btnStyle = 'border-rose-500 bg-rose-950/50 text-rose-200 ring-1 ring-rose-500/50';
+                          } else {
+                            btnStyle = 'border-slate-800/60 bg-black/20 text-slate-500 opacity-60';
+                          }
+                        } else if (isSelected) {
+                          btnStyle = 'border-blue-500 bg-blue-950/50 text-white ring-2 ring-blue-500/60 font-medium';
                         }
-                      } else if (isSelected) {
-                        btnStyle = 'border-blue-500 bg-blue-950/40 text-white';
-                      }
 
-                      return (
+                        return (
+                          <button
+                            key={optIdx}
+                            disabled={isSubmitted}
+                            onClick={() => setSelectedQuizOption(prev => ({ ...prev, [milestone.id]: optIdx }))}
+                            className={`p-3 rounded-xl border text-left font-medium transition flex items-start gap-2.5 ${btnStyle}`}
+                          >
+                            <span className="font-mono text-slate-400 font-bold shrink-0">{String.fromCharCode(65 + optIdx)}.</span>
+                            <span className="leading-relaxed">{opt}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* SUBMIT OR FEEDBACK */}
+                    {!isSubmitted ? (
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-[10px] text-slate-400">
+                          ⚠️ EXP is awarded <strong className="text-emerald-400">strictly on correct answers</strong>.
+                        </span>
                         <button
-                          key={optIdx}
-                          disabled={quizSubmitted}
-                          onClick={() => setSelectedQuizOption(optIdx)}
-                          className={`p-2.5 rounded-lg border text-left font-medium transition ${btnStyle}`}
+                          onClick={() => handleMilestoneQuizSubmit(milestone.id, q)}
+                          disabled={selected === undefined || selected === null}
+                          className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-bold text-xs transition shadow-md shadow-blue-600/30"
                         >
-                          <span className="font-mono text-slate-500 mr-2">{String.fromCharCode(65 + optIdx)}.</span>
-                          {opt}
+                          Submit Answer & Verify
                         </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* SUBMIT OR FEEDBACK */}
-                  {!quizSubmitted ? (
-                    <div className="flex items-center justify-between pt-1">
-                      <span className="text-[10px] text-slate-400">
-                        Tip: Choose carefully. A wrong answer alerts the Adaptive Agent!
-                      </span>
-                      <button
-                        onClick={handleQuizSubmit}
-                        disabled={selectedQuizOption === null}
-                        className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-bold text-xs transition"
-                      >
-                        Submit Answer
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="p-3 rounded-lg bg-black/40 border border-slate-800 space-y-2 text-xs">
-                      {selectedQuizOption === 1 ? (
-                        <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-                          <CheckCircle2 className="w-4 h-4 shrink-0" />
-                          <span>Correct! LEFT JOIN preserves all records from the primary table. +50 XP awarded!</span>
-                        </div>
-                      ) : (
-                        <div className="space-y-1 text-rose-300">
-                          <div className="flex items-center gap-2 font-semibold">
-                            <XCircle className="w-4 h-4 shrink-0 text-rose-400" />
-                            <span>Incorrect Answer! The correct answer was LEFT OUTER JOIN.</span>
+                      </div>
+                    ) : (
+                      <div className="p-3.5 rounded-xl bg-black/50 border border-slate-800 space-y-2 text-xs">
+                        {fb?.isCorrect ? (
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                              <span>Correct! {fb.firstTime ? '+50 XP awarded to your profile!' : '(Competency already verified)'}</span>
+                            </div>
+                            <p className="text-[11px] text-slate-300 pl-6 leading-relaxed">{q.explanation}</p>
                           </div>
-                          <p className="text-[11px] text-slate-400 pl-6">
-                            ⚠️ The Adaptive Agent detected a conceptual gap and injected a 45-minute recovery module into your path!
-                          </p>
-                        </div>
-                      )}
+                        ) : (
+                          <div className="space-y-1.5 text-rose-300">
+                            <div className="flex items-center gap-2 font-bold text-xs">
+                              <XCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                              <span>Incorrect Choice! 0 XP Awarded.</span>
+                            </div>
+                            <p className="text-[11px] text-slate-300 pl-6 leading-relaxed">
+                              <strong className="text-white">Correct Answer: </strong>{q.options[q.correctIndex]}
+                            </p>
+                            <p className="text-[11px] text-slate-400 pl-6 leading-relaxed">{q.explanation}</p>
+                            <p className="text-[11px] text-amber-400 pl-6 font-semibold">
+                              ⚠️ The Adaptive Agent detected a conceptual gap and updated your telemetry!
+                            </p>
+                          </div>
+                        )}
 
-                      <button
-                        onClick={handleQuizReset}
-                        className="text-[11px] text-slate-400 hover:text-white underline block pt-1"
-                      >
-                        Try Question Again
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+                        <div className="flex items-center justify-between pt-2 border-t border-slate-800">
+                          <button
+                            onClick={() => handleMilestoneQuizReset(milestone.id)}
+                            className="text-[11px] text-slate-400 hover:text-white underline"
+                          >
+                            Try Question Again
+                          </button>
+                          <button
+                            onClick={() => setActiveTab('practice')}
+                            className="text-[11px] text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1"
+                          >
+                            <span>Open 28+ Diagnostic Questions in Lab</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
               
               <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-black/40 border border-slate-800 text-xs gap-3">

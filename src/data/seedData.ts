@@ -327,62 +327,9 @@ export const ADAPTED_ROADMAP_ALEX: RoadmapMilestone[] = [
   }
 ];
 
-export const SQL_PRACTICE_QUESTIONS: PracticeQuestion[] = [
-  {
-    id: 'q-join-1',
-    skillId: 'sql',
-    skillName: 'SQL & Relational DB',
-    subConcept: 'INNER JOIN vs LEFT JOIN',
-    prompt: 'You have a `users` table and an `orders` table. You need to return all registered users, including those who have never placed an order. Which SQL join query accomplishes this?',
-    type: 'mcq',
-    options: [
-      'SELECT * FROM users INNER JOIN orders ON users.id = orders.user_id;',
-      'SELECT * FROM users LEFT JOIN orders ON users.id = orders.user_id;',
-      'SELECT * FROM orders RIGHT JOIN users ON orders.id = users.id WHERE orders.id IS NOT NULL;',
-      'SELECT * FROM users CROSS JOIN orders;'
-    ],
-    correctIndex: 1,
-    explanation: 'A LEFT JOIN returns all rows from the left table (`users`), along with matched records from the right table (`orders`). For users with no orders, the order fields will contain NULL.',
-    hint: 'Think about which table is on the "left" of the query and must preserve all its records even if there is no match.',
-    difficulty: 'intermediate'
-  },
-  {
-    id: 'q-join-2',
-    skillId: 'sql',
-    skillName: 'SQL & Relational DB',
-    subConcept: 'Aggregation with JOINs',
-    prompt: 'Look at the query below. It attempts to find the total revenue per user, but users with zero orders are disappearing from the result. Why?\n\nSELECT u.name, SUM(o.amount)\nFROM users u\nJOIN orders o ON u.id = o.user_id\nGROUP BY u.name;',
-    type: 'debugging',
-    options: [
-      'The GROUP BY statement should be grouped by o.amount instead of u.name.',
-      'A plain JOIN defaults to an INNER JOIN, discarding users without matching rows in orders.',
-      'SUM() cannot be used with JOIN statements in standard SQL.',
-      'The ON condition syntax is invalid for PostgreSQL.'
-    ],
-    correctIndex: 1,
-    explanation: 'An unqualified JOIN is an INNER JOIN. It filters out any user who has 0 rows in the orders table. Changing it to `LEFT JOIN` and using `COALESCE(SUM(o.amount), 0)` keeps all users.',
-    hint: 'What kind of join does SQL execute when you omit the words INNER or OUTER?',
-    difficulty: 'intermediate'
-  },
-  {
-    id: 'q-react-1',
-    skillId: 'react',
-    skillName: 'React.js',
-    subConcept: 'State Batching in React 18',
-    prompt: 'In React 18, when multiple state setter functions are executed inside a setTimeout callback or fetch promise, what occurs by default?',
-    type: 'mcq',
-    options: [
-      'React re-renders immediately after every individual state setter.',
-      'React automatically batches updates together into a single coordinated re-render.',
-      'An unhandled exception is thrown unless wrapped in flushSync.',
-      'Batching only works inside native React synthetic event handlers.'
-    ],
-    correctIndex: 1,
-    explanation: 'React 18 introduced automatic batching across all asynchronous contexts (promises, setTimeout, native listeners), reducing redundant re-renders.',
-    hint: 'React 18 expanded batching beyond synthetic event handlers to all execution contexts.',
-    difficulty: 'intermediate'
-  }
-];
+import { COMPREHENSIVE_QUESTION_BANK } from './questionBank';
+
+export const SQL_PRACTICE_QUESTIONS: PracticeQuestion[] = COMPREHENSIVE_QUESTION_BANK;
 
 export const INITIAL_AGENT_RUNS: AgentRunLog[] = [
   {

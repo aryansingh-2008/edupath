@@ -48,6 +48,13 @@ interface EduPathContextType {
   setIsOnboardingOpen: (open: boolean) => void;
   isCustomModalOpen: boolean;
   setIsCustomModalOpen: (open: boolean) => void;
+  solvedQuestionIds: string[];
+  submitQuizAnswer: (
+    questionId: string,
+    selectedIndex: number,
+    isCorrect: boolean,
+    xpAmount?: number
+  ) => { isCorrect: boolean; xpAwarded: number; firstTime: boolean };
   updateProfile: (updates: Partial<LearnerProfile>) => void;
   setActiveMissionModal: (open: boolean) => void;
   setCustomProfileAndRoadmap: (newProfile: LearnerProfile, newRoadmap: RoadmapMilestone[]) => void;
@@ -76,6 +83,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
   const [activeMissionModal, setActiveMissionModal] = useState<boolean>(false);
+  const [solvedQuestionIds, setSolvedQuestionIds] = useState<string[]>([]);
 
   const login = (
     username: string,
@@ -242,6 +250,75 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setAgentRuns(prev => [progressRun, ...prev]);
   };
 
+  // SUBMIT QUIZ ANSWER: ONLY AWARDS XP ON CORRECT ANSWERS!
+  const submitQuizAnswer = (
+    questionId: string,
+    selectedIndex: number,
+    isCorrect: boolean,
+    xpAmount: number = 50
+  ) => {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const alreadySolved = solvedQuestionIds.includes(questionId);
+
+    setPracticeAttempts(prev => [...prev, { questionId, isCorrect, timestamp: timeStr }]);
+
+    let xpAwarded = 0;
+    if (isCorrect) {
+      if (!alreadySolved) {
+        xpAwarded = xpAmount;
+        setSolvedQuestionIds(prev => [...prev, questionId]);
+        setProfile(prev => ({
+          ...prev,
+          xpPoints: prev.xpPoints + xpAwarded,
+          readinessPercentage: Math.min(100, prev.readinessPercentage + 2)
+        }));
+
+        try {
+          confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { y: 0.7 }
+          });
+        } catch {
+          // safe fallback
+        }
+
+        const progressRun: AgentRunLog = {
+          id: `run-${Date.now()}`,
+          agentName: 'Progress Agent',
+          status: 'success',
+          durationMs: 180,
+          inputSummary: `Correct answer verified on question: ${questionId}`,
+          outputSummary: `Awarded +${xpAwarded} XP. Verified demonstrated competency.`,
+          confidence: 0.99,
+          timestamp: timeStr
+        };
+        setAgentRuns(prev => [progressRun, ...prev]);
+      }
+    } else {
+      // STRICT ZERO XP FOR WRONG ANSWERS!
+      xpAwarded = 0;
+      const failureCount = practiceAttempts.filter(a => !a.isCorrect).length + 1;
+      if (failureCount >= 2 && !bottleneckDetected) {
+        simulateSqlStruggle();
+      } else {
+        const practiceRun: AgentRunLog = {
+          id: `run-${Date.now()}`,
+          agentName: 'Practice Agent',
+          status: 'success',
+          durationMs: 220,
+          inputSummary: `Diagnostic struggle on question: ${questionId}`,
+          outputSummary: '0 XP awarded. Logged conceptual difficulty for adaptive remediation.',
+          confidence: 0.96,
+          timestamp: timeStr
+        };
+        setAgentRuns(prev => [practiceRun, ...prev]);
+      }
+    }
+
+    return { isCorrect, xpAwarded, firstTime: !alreadySolved };
+  };
+
   // RESET DEMO TO CLEAN BASELINE
   const resetDemo = () => {
     setProfile(INITIAL_ALEX_PROFILE);
@@ -250,6 +327,7 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setLatestDecision(null);
     setAgentRuns(INITIAL_AGENT_RUNS);
     setPracticeAttempts([]);
+    setSolvedQuestionIds([]);
     setLearningDebtRebalanced(false);
     setIsWhyPlanChangedModalOpen(false);
     setActiveTab('path');
@@ -374,6 +452,8 @@ export const EduPathProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setIsOnboardingOpen,
         isCustomModalOpen,
         setIsCustomModalOpen,
+        solvedQuestionIds,
+        submitQuizAnswer,
         updateProfile,
         setActiveMissionModal,
         setCustomProfileAndRoadmap
