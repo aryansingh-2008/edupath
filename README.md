@@ -1,6 +1,7 @@
 # EduPath — Autonomous AI Career Learning Platform
 
 [![EduPath CI/CD](https://github.com/aryansingh-2008/edupath/actions/workflows/ci.yml/badge.svg)](https://github.com/aryansingh-2008/edupath/actions/workflows/ci.yml)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live%20Demo-brightgreen?logo=vercel)](https://edupath-tawny.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
@@ -11,14 +12,21 @@
 
 ---
 
+## 🌐 Live Production Application
+
+- **Live URL**: [https://edupath-tawny.vercel.app](https://edupath-tawny.vercel.app)
+- **GitHub Repository**: [https://github.com/aryansingh-2008/edupath](https://github.com/aryansingh-2008/edupath)
+
+---
+
 ## ⚡ Quick Evaluation Access
 
 For judges, evaluators, and peer reviewers:
-- **Demo Mode**: Enabled out of the box — zero external API keys or database setup required.
-- **Login Credentials**:
+- **Live Demo Link**: [https://edupath-tawny.vercel.app](https://edupath-tawny.vercel.app)
+- **Evaluator Credentials**:
   - **Username / Email**: `admin` (or `admin@edupath.ai`)
   - **Password**: `123456`
-  - *Or click "1-Click Evaluator Access" on the login screen.*
+  - *Or click "1-Click Judge Access" on the landing page or login screen.*
 - **Offline PDF Manual**: Detailed documentation is included in [`EduPath_User_Manual.pdf`](./EduPath_User_Manual.pdf).
 
 ---
