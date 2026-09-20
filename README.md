@@ -1,36 +1,162 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EduPath — Autonomous AI Career Learning Platform
 
-## Getting Started
+[![EduPath CI/CD](https://github.com/aryansingh-2008/edupath/actions/workflows/ci.yml/badge.svg)](https://github.com/aryansingh-2008/edupath/actions/workflows/ci.yml)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-First, run the development server:
+> **"Your skills today. Your career tomorrow. One adaptive path."**  
+> EduPath is an autonomous career learning and skill gap agent that replaces rigid, static course playlists with dynamic, closed-loop adaptive curriculum sequencing.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## ⚡ Quick Evaluation Access
+
+For judges, evaluators, and peer reviewers:
+- **Demo Mode**: Enabled out of the box — zero external API keys or database setup required.
+- **Login Credentials**:
+  - **Username / Email**: `admin` (or `admin@edupath.ai`)
+  - **Password**: `123456`
+  - *Or click "1-Click Evaluator Access" on the login screen.*
+- **Offline PDF Manual**: Detailed documentation is included in [`EduPath_User_Manual.pdf`](./EduPath_User_Manual.pdf).
+
+---
+
+## 🌟 Core Pillars
+
+EduPath focuses on three rock-solid, production-grade pillars:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        PUBLIC LANDING PAGE                             │
+│                  Curriculum Showcase & Auth Gate                       │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                    LOGIN & CREATE ACCOUNT PORTAL                       │
+│                   Evaluator 1-Click Credentials                        │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                   CAREER OPERATING SYSTEM DASHBOARD                    │
+├───────────────────────┬────────────────────────┬───────────────────────┤
+│    ADAPTIVE ROADMAP   │  SKILL GAPS & READINESS│       AI MENTOR       │
+│  Topological DAG with │  Market benchmark delta│ Context-aware agent   │
+│  dynamic recovery     │  radar & readiness     │ with explainable      │
+│  milestones           │  telemetry             │ decision receipts     │
+└───────────────────────┴────────────────────────┴───────────────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. Dynamic Adaptive Roadmap
+- **Topological Dependency DAG**: Enforces mastery of prerequisites before moving to advanced topics.
+- **Closed-Loop Replanning**: When diagnostic assessment detects an obstacle (e.g., SQL `JOIN` failure), the agent mutates the active roadmap in real time—injecting a focused recovery sprint and adjusting timeline estimates.
+- **Transparent Decision Receipts**: Every plan mutation produces an explainable receipt (Trigger, Evidence, Decision, Action, Impact).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Skill Gaps & Career Readiness
+- **Market Alignment Benchmark**: Vector-calculated distance between claimed skills and industry role benchmarks.
+- **Multi-Vector Radar Telemetry**: Visualizes strength distribution across Core Frontend, Backend Systems, Cloud Infrastructure, and Testing.
+- **Verified Competency Tracking**: Separates claimed skills from demonstrated competencies verified via diagnostic tests.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Contextual AI Mentor
+- **Profile-Aware Guidance**: Answers questions with full context of the learner's active projects, current bottlenecks, and career targets.
+- **Actionable Remediation**: Generates tailored code snippets, conceptual architectural analogies, and guided debugging exercises.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Architecture & Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server & Client Components)
+- **Language**: [TypeScript 5.x](https://www.typescriptlang.org/) (Strict Type Safety)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + Lucide React Icons
+- **State Management**: Zustand with persistent telemetry store
+- **Multi-Agent Engine**: 9 specialized agents with deterministic demo fallback
+- **CI/CD**: GitHub Actions workflow verifying typecheck, lint, and test suites
+- **Deployment**: Zero-configuration Vercel deployment ready
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🚀 Getting Started
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Prerequisites
+- Node.js 18.x or 20.x LTS
+- npm 9.x or higher
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1. Clone the Repository
+```bash
+git clone https://github.com/aryansingh-2008/edupath.git
+cd edupath
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Launch Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 🧪 Verification & Testing
+
+EduPath includes an automated test suite verifying core system invariants:
+
+```bash
+# Run TypeScript type safety check
+npx tsc --noEmit
+
+# Run ESLint check
+npm run lint
+
+# Run automated tests
+npm test
+
+# Build production bundle
+npm run build
+```
+
+### Verified Test Suites:
+- `Alex Rivera Invariant Checks`: Baseline profile data integrity.
+- `Roadmap DAG Topological Validation`: Prerequisite resolution without cyclic dependencies.
+- `Adaptive Replanning State Machine`: Real-time bottleneck injection and receipt generation.
+- `Diagnostic & Readiness Telemetry`: Mathematical correctness of score calculations.
+
+---
+
+## ☁️ Deployment (Vercel)
+
+Deploying EduPath takes less than 2 minutes:
+
+### Option 1: Vercel CLI
+```bash
+npx vercel
+```
+
+### Option 2: GitHub Integration
+1. Push your repository to GitHub.
+2. Import the project in the [Vercel Dashboard](https://vercel.com/new).
+3. Framework Preset: **Next.js**.
+4. Click **Deploy**. No additional environment variables required for Demo Mode!
+
+---
+
+## 📄 Documentation
+
+For full design documents and technical specifications:
+- [`EduPath_User_Manual.pdf`](./EduPath_User_Manual.pdf) — Comprehensive 10-page User & Technical Manual
+- [`docs/TECHNICAL_ARCHITECTURE.md`](docs/TECHNICAL_ARCHITECTURE.md) — Multi-agent system specifications & data flows
+- [`docs/PRODUCT_DECISIONS.md`](docs/PRODUCT_DECISIONS.md) — Design tradeoffs and UX decisions
+- [`docs/RUBRIC_MAPPING.md`](docs/RUBRIC_MAPPING.md) — Evaluation criteria alignment matrix
+
+---
+
+## 👤 Author & License
+
+Developed by **Aryan Singh** ([@aryansingh-2008](https://github.com/aryansingh-2008))  
+License: [MIT](LICENSE)

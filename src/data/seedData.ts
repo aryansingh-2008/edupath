@@ -1,0 +1,428 @@
+// Seed Data & Personas for EduPath Demo Mode
+
+import { LearnerProfile, RoadmapMilestone, PracticeQuestion, AgentRunLog } from '../types/index';
+
+export const INITIAL_ALEX_PROFILE: LearnerProfile = {
+  id: 'alex-fullstack',
+  name: 'Alex Rivera',
+  avatarInitial: 'A',
+  tagline: 'Junior Frontend Dev aspiring to Full Stack Engineer',
+  targetRole: 'Full Stack Developer',
+  experienceLevel: 'Junior (1.5 yrs)',
+  learningPreference: 'Coding & Projects',
+  dailyCommitmentMinutes: 30,
+  readinessPercentage: 42,
+  streakDays: 4,
+  xpPoints: 380,
+  resumeParsed: true,
+  extractedRawProjects: 3,
+  skills: [
+    {
+      id: 'js',
+      name: 'JavaScript (ES6+)',
+      category: 'frontend',
+      estimatedLevel: 0.78,
+      confidence: 0.88,
+      targetBenchmark: 0.85,
+      status: 'strong',
+      evidence: [
+        { source: 'resume', quote: 'Built responsive client web applications using ES6 async/await, closures, and modular JS.', verified: true },
+        { source: 'project', quote: 'GitHub repo: task-tracker-spa with 12 custom DOM manipulation modules.', verified: true }
+      ]
+    },
+    {
+      id: 'react',
+      name: 'React.js',
+      category: 'frontend',
+      estimatedLevel: 0.62,
+      confidence: 0.82,
+      targetBenchmark: 0.80,
+      status: 'developing',
+      evidence: [
+        { source: 'resume', quote: 'Built interactive frontend components utilizing React hooks (useState, useEffect, useContext).', verified: true },
+        { source: 'project', quote: 'Deployed personal portfolio with React and client-side routing.', verified: true }
+      ]
+    },
+    {
+      id: 'node',
+      name: 'Node.js & Express',
+      category: 'backend',
+      estimatedLevel: 0.41,
+      confidence: 0.65,
+      targetBenchmark: 0.75,
+      status: 'developing',
+      evidence: [
+        { source: 'resume', quote: 'Created basic Express REST endpoints returning mock JSON data.', verified: false }
+      ]
+    },
+    {
+      id: 'sql',
+      name: 'SQL & Relational DB',
+      category: 'database',
+      estimatedLevel: 0.34,
+      confidence: 0.70,
+      targetBenchmark: 0.80,
+      status: 'gap',
+      evidence: [
+        { source: 'resume', quote: 'Understands basic SELECT and WHERE queries on SQLite.', verified: false },
+        { source: 'practice', quote: 'Diagnostic failure: struggles with multi-table JOINs and foreign key constraints.', verified: true }
+      ]
+    },
+    {
+      id: 'system-design',
+      name: 'System Design & Scalability',
+      category: 'architecture',
+      estimatedLevel: 0.18,
+      confidence: 0.55,
+      targetBenchmark: 0.70,
+      status: 'gap',
+      evidence: [
+        { source: 'resume', quote: 'Single-server deployments; no experience with load balancers, caching, or DB replication.', verified: false }
+      ]
+    },
+    {
+      id: 'docker',
+      name: 'Docker & Containers',
+      category: 'devops',
+      estimatedLevel: 0.22,
+      confidence: 0.60,
+      targetBenchmark: 0.65,
+      status: 'gap',
+      evidence: [
+        { source: 'resume', quote: 'Can run pre-built container images locally using Docker Desktop.', verified: false }
+      ]
+    }
+  ],
+  learningDebt: [
+    {
+      skillId: 'sql',
+      name: 'SQL Foreign Keys & Indexing',
+      daysDelayed: 3,
+      reason: 'Postponed database schema design during the initial frontend focus.',
+      prerequisiteFor: ['Backend REST APIs', 'User Authentication Flow'],
+      severity: 'critical'
+    },
+    {
+      skillId: 'docker',
+      name: 'Dockerfile Multi-stage Builds',
+      daysDelayed: 1,
+      reason: 'Skipped containerization chapter to focus on Express routing.',
+      prerequisiteFor: ['Production Cloud Deployment'],
+      severity: 'warning'
+    }
+  ]
+};
+
+export const INITIAL_ROADMAP_ALEX: RoadmapMilestone[] = [
+  {
+    id: 'm1',
+    weekNumber: 1,
+    title: 'Week 1: SQL Foundations & Relational Schemas',
+    objective: 'Master relational table structure, foreign keys, normalization, and elementary filtering.',
+    skillFocus: 'SQL & Relational DB',
+    priority: 'critical',
+    status: 'active',
+    isRecoveryModule: false,
+    estimatedMinutes: 120,
+    tasks: [
+      { id: 't1', title: 'PostgreSQL Architecture & Schema Constraints', type: 'reading', durationMinutes: 25, done: true },
+      { id: 't2', title: 'Practice Lab: INNER, LEFT, and RIGHT JOIN Queries', type: 'quiz', durationMinutes: 25, done: false },
+      { id: 't3', title: 'Mini-Challenge: E-Commerce Schema Design', type: 'coding', durationMinutes: 40, done: false }
+    ],
+    resource: {
+      id: 'r1',
+      title: 'PostgreSQL Tutorial for Beginners',
+      url: 'https://www.postgresql.org/docs/current/tutorial.html',
+      source: 'Official PostgreSQL Documentation',
+      type: 'documentation',
+      difficulty: 'beginner',
+      estimatedMinutes: 45,
+      skillId: 'sql',
+      whyRecommended: 'Industry standard documentation with zero third-party bias.'
+    }
+  },
+  {
+    id: 'm2',
+    weekNumber: 2,
+    title: 'Week 2: Backend APIs with Node & Express',
+    objective: 'Wire relational database queries into production Express middleware and parameterized queries.',
+    skillFocus: 'Node.js & Express',
+    priority: 'high',
+    status: 'upcoming',
+    isRecoveryModule: false,
+    estimatedMinutes: 140,
+    tasks: [
+      { id: 't4', title: 'Building REST Endpoints with Express Router', type: 'reading', durationMinutes: 30, done: false },
+      { id: 't5', title: 'Connecting pg node-postgres to Node Service', type: 'coding', durationMinutes: 45, done: false },
+      { id: 't6', title: 'JWT Authentication Middleware', type: 'quiz', durationMinutes: 30, done: false }
+    ],
+    resource: {
+      id: 'r2',
+      title: 'Express Routing & Middleware Guide',
+      url: 'https://expressjs.com/en/guide/routing.html',
+      source: 'Express Official Docs',
+      type: 'documentation',
+      difficulty: 'intermediate',
+      estimatedMinutes: 35,
+      skillId: 'node',
+      whyRecommended: 'Canonical guide for structuring maintainable server-side endpoints.'
+    }
+  },
+  {
+    id: 'm3',
+    weekNumber: 3,
+    title: 'Week 3: System Design & Caching Architecture',
+    objective: 'Implement Redis caching, indexing strategies, and understand horizontal vs vertical scaling.',
+    skillFocus: 'System Design & Scalability',
+    priority: 'high',
+    status: 'upcoming',
+    isRecoveryModule: false,
+    estimatedMinutes: 160,
+    tasks: [
+      { id: 't7', title: 'Database Indexing (B-Tree vs Hash) Performance', type: 'reading', durationMinutes: 40, done: false },
+      { id: 't8', title: 'System Design Primer: Scalable Web Architectures', type: 'reading', durationMinutes: 50, done: false }
+    ],
+    resource: {
+      id: 'r3',
+      title: 'System Design Primer by Donne Martin',
+      url: 'https://github.com/donnemartin/system-design-primer',
+      source: 'GitHub / Open Source',
+      type: 'article',
+      difficulty: 'advanced',
+      estimatedMinutes: 60,
+      skillId: 'system-design',
+      whyRecommended: 'The gold standard open-source guide for software architecture.'
+    },
+    capstoneProject: {
+      id: 'proj-fullstack',
+      title: 'Multi-Tenant Expense & Budget API',
+      goal: 'Build an authenticated REST service with PostgreSQL persistence, complex SQL JOIN aggregations, and Redis query caching.',
+      skillsTrained: ['SQL & Relational DB', 'Node.js & Express', 'System Design & Scalability'],
+      requirements: [
+        'Relational schema with Users, Organizations, and Expenses tables',
+        'Complex SQL queries for category spend aggregations using JOINs and GROUP BY',
+        'Parameterized inputs to eliminate SQL injection risks',
+        'Docker-compose file launching API, Postgres, and Redis containers'
+      ],
+      techStack: ['Node.js', 'Express', 'PostgreSQL', 'Docker', 'Redis'],
+      evaluationCriteria: [
+        'Correct foreign key cascading rules',
+        'Demonstrated query execution times under 20ms using EXPLAIN ANALYZE',
+        'Passing integration test suite'
+      ],
+      difficulty: 'intermediate'
+    }
+  }
+];
+
+export const ADAPTED_ROADMAP_ALEX: RoadmapMilestone[] = [
+  {
+    id: 'm-recovery',
+    weekNumber: 1,
+    title: '⚡ Recovery Module: SQL JOIN Mastery & Visual Queries',
+    objective: 'Reinforce relational joins (INNER, LEFT, RIGHT, FULL) with visual Venn diagrams and targeted interactive query challenges.',
+    skillFocus: 'SQL & Relational DB',
+    priority: 'critical',
+    status: 'active',
+    isRecoveryModule: true,
+    estimatedMinutes: 45,
+    tasks: [
+      { id: 'rec-t1', title: 'Visual Breakdown of Relational JOIN Types (Interactive)', type: 'reading', durationMinutes: 15, done: false },
+      { id: 'rec-t2', title: 'Interactive Join Sandbox: 3 Progressive Query Fixes', type: 'practice', durationMinutes: 20, done: false },
+      { id: 'rec-t3', title: 'JOIN Recovery Diagnostic Quiz', type: 'quiz', durationMinutes: 10, done: false }
+    ],
+    resource: {
+      id: 'r-rec',
+      title: 'SQL JOINs Explained Visually',
+      url: 'https://mode.com/sql-tutorial/sql-joins/',
+      source: 'Mode Analytics Academy',
+      type: 'interactive',
+      difficulty: 'beginner',
+      estimatedMinutes: 25,
+      skillId: 'sql',
+      whyRecommended: 'Visual diagrammatic breakdown proven to resolve JOIN confusion quickly.'
+    }
+  },
+  {
+    id: 'm1',
+    weekNumber: 1,
+    title: 'Week 1: SQL Foundations & Relational Schemas',
+    objective: 'Master relational table structure, foreign keys, normalization, and elementary filtering.',
+    skillFocus: 'SQL & Relational DB',
+    priority: 'critical',
+    status: 'active',
+    isRecoveryModule: false,
+    estimatedMinutes: 120,
+    tasks: [
+      { id: 't1', title: 'PostgreSQL Architecture & Schema Constraints', type: 'reading', durationMinutes: 25, done: true },
+      { id: 't2', title: 'Practice Lab: INNER, LEFT, and RIGHT JOIN Queries', type: 'quiz', durationMinutes: 25, done: true },
+      { id: 't3', title: 'Mini-Challenge: E-Commerce Schema Design', type: 'coding', durationMinutes: 40, done: false }
+    ],
+    resource: {
+      id: 'r1',
+      title: 'PostgreSQL Tutorial for Beginners',
+      url: 'https://www.postgresql.org/docs/current/tutorial.html',
+      source: 'Official PostgreSQL Documentation',
+      type: 'documentation',
+      difficulty: 'beginner',
+      estimatedMinutes: 45,
+      skillId: 'sql',
+      whyRecommended: 'Industry standard documentation with zero third-party bias.'
+    }
+  },
+  {
+    id: 'm2',
+    weekNumber: 2,
+    title: 'Week 2: Backend APIs with Node & Express',
+    objective: 'Wire relational database queries into production Express middleware and parameterized queries.',
+    skillFocus: 'Node.js & Express',
+    priority: 'high',
+    status: 'upcoming',
+    isRecoveryModule: false,
+    estimatedMinutes: 140,
+    delayDays: 2,
+    tasks: [
+      { id: 't4', title: 'Building REST Endpoints with Express Router', type: 'reading', durationMinutes: 30, done: false },
+      { id: 't5', title: 'Connecting pg node-postgres to Node Service', type: 'coding', durationMinutes: 45, done: false },
+      { id: 't6', title: 'JWT Authentication Middleware', type: 'quiz', durationMinutes: 30, done: false }
+    ],
+    resource: {
+      id: 'r2',
+      title: 'Express Routing & Middleware Guide',
+      url: 'https://expressjs.com/en/guide/routing.html',
+      source: 'Express Official Docs',
+      type: 'documentation',
+      difficulty: 'intermediate',
+      estimatedMinutes: 35,
+      skillId: 'node',
+      whyRecommended: 'Canonical guide for structuring maintainable server-side endpoints.'
+    }
+  },
+  {
+    id: 'm3',
+    weekNumber: 3,
+    title: 'Week 3: System Design & Caching Architecture',
+    objective: 'Implement Redis caching, indexing strategies, and understand horizontal vs vertical scaling.',
+    skillFocus: 'System Design & Scalability',
+    priority: 'high',
+    status: 'upcoming',
+    isRecoveryModule: false,
+    estimatedMinutes: 160,
+    delayDays: 2,
+    tasks: [
+      { id: 't7', title: 'Database Indexing (B-Tree vs Hash) Performance', type: 'reading', durationMinutes: 40, done: false },
+      { id: 't8', title: 'System Design Primer: Scalable Web Architectures', type: 'reading', durationMinutes: 50, done: false }
+    ],
+    resource: {
+      id: 'r3',
+      title: 'System Design Primer by Donne Martin',
+      url: 'https://github.com/donnemartin/system-design-primer',
+      source: 'GitHub / Open Source',
+      type: 'article',
+      difficulty: 'advanced',
+      estimatedMinutes: 60,
+      skillId: 'system-design',
+      whyRecommended: 'The gold standard open-source guide for software architecture.'
+    }
+  }
+];
+
+export const SQL_PRACTICE_QUESTIONS: PracticeQuestion[] = [
+  {
+    id: 'q-join-1',
+    skillId: 'sql',
+    skillName: 'SQL & Relational DB',
+    subConcept: 'INNER JOIN vs LEFT JOIN',
+    prompt: 'You have a `users` table and an `orders` table. You need to return all registered users, including those who have never placed an order. Which SQL join query accomplishes this?',
+    type: 'mcq',
+    options: [
+      'SELECT * FROM users INNER JOIN orders ON users.id = orders.user_id;',
+      'SELECT * FROM users LEFT JOIN orders ON users.id = orders.user_id;',
+      'SELECT * FROM orders RIGHT JOIN users ON orders.id = users.id WHERE orders.id IS NOT NULL;',
+      'SELECT * FROM users CROSS JOIN orders;'
+    ],
+    correctIndex: 1,
+    explanation: 'A LEFT JOIN returns all rows from the left table (`users`), along with matched records from the right table (`orders`). For users with no orders, the order fields will contain NULL.',
+    hint: 'Think about which table is on the "left" of the query and must preserve all its records even if there is no match.',
+    difficulty: 'intermediate'
+  },
+  {
+    id: 'q-join-2',
+    skillId: 'sql',
+    skillName: 'SQL & Relational DB',
+    subConcept: 'Aggregation with JOINs',
+    prompt: 'Look at the query below. It attempts to find the total revenue per user, but users with zero orders are disappearing from the result. Why?\n\nSELECT u.name, SUM(o.amount)\nFROM users u\nJOIN orders o ON u.id = o.user_id\nGROUP BY u.name;',
+    type: 'debugging',
+    options: [
+      'The GROUP BY statement should be grouped by o.amount instead of u.name.',
+      'A plain JOIN defaults to an INNER JOIN, discarding users without matching rows in orders.',
+      'SUM() cannot be used with JOIN statements in standard SQL.',
+      'The ON condition syntax is invalid for PostgreSQL.'
+    ],
+    correctIndex: 1,
+    explanation: 'An unqualified JOIN is an INNER JOIN. It filters out any user who has 0 rows in the orders table. Changing it to `LEFT JOIN` and using `COALESCE(SUM(o.amount), 0)` keeps all users.',
+    hint: 'What kind of join does SQL execute when you omit the words INNER or OUTER?',
+    difficulty: 'intermediate'
+  },
+  {
+    id: 'q-react-1',
+    skillId: 'react',
+    skillName: 'React.js',
+    subConcept: 'State Batching in React 18',
+    prompt: 'In React 18, when multiple state setter functions are executed inside a setTimeout callback or fetch promise, what occurs by default?',
+    type: 'mcq',
+    options: [
+      'React re-renders immediately after every individual state setter.',
+      'React automatically batches updates together into a single coordinated re-render.',
+      'An unhandled exception is thrown unless wrapped in flushSync.',
+      'Batching only works inside native React synthetic event handlers.'
+    ],
+    correctIndex: 1,
+    explanation: 'React 18 introduced automatic batching across all asynchronous contexts (promises, setTimeout, native listeners), reducing redundant re-renders.',
+    hint: 'React 18 expanded batching beyond synthetic event handlers to all execution contexts.',
+    difficulty: 'intermediate'
+  }
+];
+
+export const INITIAL_AGENT_RUNS: AgentRunLog[] = [
+  {
+    id: 'log-1',
+    agentName: 'Profile Agent',
+    status: 'success',
+    durationMs: 420,
+    inputSummary: 'Parsed resume: Alex_Rivera_Software_Resume.pdf (1,480 tokens)',
+    outputSummary: 'Extracted 6 verified skills, 3 projects, 1 education credential. Calculated average confidence: 0.74.',
+    confidence: 0.88,
+    timestamp: 'Just now'
+  },
+  {
+    id: 'log-2',
+    agentName: 'Skill Intelligence Agent',
+    status: 'success',
+    durationMs: 280,
+    inputSummary: 'Normalized extracted entities against canonical Full Stack Developer taxonomy.',
+    outputSummary: 'Matched 6 ontology nodes: JS (ES6), React, Node, SQL, Docker, System Design.',
+    confidence: 0.95,
+    timestamp: 'Just now'
+  },
+  {
+    id: 'log-3',
+    agentName: 'Gap Agent',
+    status: 'success',
+    durationMs: 310,
+    inputSummary: 'Compared Alex (current: 42%) vs Full Stack benchmark vector.',
+    outputSummary: 'Flagged 2 Critical Gaps (SQL: delta 0.46, System Design: delta 0.52).',
+    confidence: 0.91,
+    timestamp: 'Just now'
+  },
+  {
+    id: 'log-4',
+    agentName: 'Roadmap Planner Agent',
+    status: 'success',
+    durationMs: 510,
+    inputSummary: 'Constructed 3-week learning DAG for 30 min/day commitment.',
+    outputSummary: 'Generated 3 milestones, 8 tasks, and 1 verified capstone project.',
+    confidence: 0.89,
+    timestamp: 'Just now'
+  }
+];
